@@ -3,15 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STANCE PA2PB — Ride Low. Ride Loud.</title>
-<meta name="description" content="The first ride-hailing app built for stance culture. Book a ride in a bagged, static, or slammed build — driven by the crews who built them.">
-<meta property="og:title" content="STANCE PA2PB — Ride Low. Ride Loud.">
-<meta property="og:description" content="The first ride-hailing app built for stance culture, launching soon in South Africa.">
-<meta property="og:type" content="website">
-<meta name="theme-color" content="#0A0A0D">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%230A0A0D'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='%23C8FF4D' font-family='Arial' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
+<title>StancePA2PB Office</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --asphalt:#0A0A0D;
@@ -23,459 +17,804 @@
     --white:#F3F2F6;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Inter',sans-serif; background:var(--asphalt); color:var(--white); line-height:1.6;}
+  body{font-family:'Inter',sans-serif; background:var(--asphalt); color:var(--white); min-height:100vh;}
   h1,h2,h3{font-family:'Rajdhani',sans-serif; font-weight:700;}
-  a{text-decoration:none; color:inherit;}
 
-  /* ---------- NAV ---------- */
-  nav{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:20px 6%; position:sticky; top:0; z-index:50;
-    background:rgba(10,10,13,0.9); backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(255,255,255,0.07);
+  /* ---------- LOGIN ---------- */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
   }
-  .logo{font-family:'Rajdhani'; font-weight:700; font-size:1.25rem; letter-spacing:0.01em;}
-  .logo span{color:var(--lime);}
-  .nav-cta{
-    background:var(--lime); color:#0A0A0D; padding:10px 20px; border-radius:4px;
-    font-weight:700; font-size:0.85rem;
+  .login-card{
+    width:100%; max-width:380px; background:var(--panel); border:1px solid rgba(255,255,255,0.08);
+    border-radius:8px; padding:36px 30px; border-top:4px solid var(--lime);
   }
-
-  /* ---------- HERO ---------- */
-  .hero{
-    position:relative; padding:90px 6% 70px; overflow:hidden;
-    background:var(--panel);
-    border-bottom:4px solid var(--lime);
-  }
-  .hero-inner{
-    max-width:1120px; margin:0 auto; display:grid; grid-template-columns:1.1fr 0.7fr;
-    gap:50px; align-items:center;
-  }
-  @media (max-width:860px){ .hero-inner{grid-template-columns:1fr;} }
-
-  .hero-tag{
-    display:inline-flex; align-items:center; gap:8px;
-    color:var(--lime); font-family:'Rajdhani'; font-weight:600; font-size:0.9rem;
-    margin-bottom:22px; letter-spacing:0.02em;
-  }
-  .hero-tag::before{content:''; width:26px; height:2px; background:var(--lime);}
-
-  .hero h1{font-size:clamp(2.6rem,5.5vw,4.2rem); line-height:0.98;}
-  .hero h1 em{font-style:normal; color:var(--lime);}
-  .hero p.sub{margin:22px 0 0; max-width:460px; color:var(--steel); font-size:1.08rem;}
-  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-top:34px;}
-  .counter-text{margin-top:18px; color:var(--lime); font-size:0.85rem; font-weight:600; min-height:20px;}
-  .btn{
-    padding:15px 26px; border-radius:4px; font-weight:700; font-size:0.92rem;
-    display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;
-    transition:transform .15s ease, box-shadow .15s ease; font-family:'Inter';
-  }
-  .btn:hover{transform:translateY(-2px);}
-  .btn-lime{background:var(--lime); color:#0A0A0D;}
-  .hero-actions .btn-lime{animation:ctaPulse 2.4s ease-in-out infinite;}
-  @keyframes ctaPulse{
-    0%, 100%{box-shadow:0 0 0 0 rgba(200,255,77,0.5);}
-    50%{box-shadow:0 0 0 8px rgba(200,255,77,0);}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .hero-actions .btn-lime{animation:none;}
-  }
-  .btn-outline{background:transparent; border:1px solid rgba(255,255,255,0.22); color:var(--white);}
-
-  /* plate badge, hero right side */
-  .plate-stack{display:flex; flex-direction:column; gap:14px;}
-  .plate{
-    background:#ffffff; border-radius:10px; padding:14px 18px;
-    border:4px solid var(--lime); display:flex; align-items:center; justify-content:center; gap:12px;
-    box-shadow:6px 6px 0 rgba(200,255,77,0.25);
-  }
-  .plate-main{
-    font-family:'Rajdhani'; font-weight:700; color:#1B3F8B; font-size:1.55rem;
-    letter-spacing:0.06em; font-style:italic; transform:skewX(-6deg);
-    text-shadow:0.5px 0.5px 0 rgba(27,63,139,0.4);
-  }
-  .plate-badge{
-    width:26px; height:26px; border-radius:50%; flex-shrink:0;
-    background:radial-gradient(circle at 35% 30%, #3E6FD9, #16264D 75%);
-    border:1px solid #0A1730;
-  }
-  .plate-gp{
-    font-family:'Rajdhani'; font-weight:700; color:#1B3F8B; font-size:1.55rem;
-    letter-spacing:0.04em; font-style:italic; transform:skewX(-6deg);
-  }
-  .hazard{
-    height:14px; width:100%; border-radius:3px;
-    background:repeating-linear-gradient(135deg, var(--lime), var(--lime) 12px, #0A0A0D 12px, #0A0A0D 24px);
-    background-size:200% 200%;
-    animation:hazardMove 1.6s linear infinite;
-  }
-  @keyframes hazardMove{
-    from{background-position:0 0;}
-    to{background-position:68px 0;}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .hazard{animation:none;}
-  }
-
-  /* ---------- MOVEMENT TICKER ---------- */
-  .ticker{
-    background:var(--lime); overflow:hidden; white-space:nowrap; border-bottom:1px solid rgba(0,0,0,0.1);
-  }
-  .ticker-track{
-    display:inline-flex; gap:40px; padding:10px 0;
-    animation:tickerScroll 22s linear infinite;
-  }
-  .ticker:hover .ticker-track{animation-play-state:paused;}
-  .ticker-track span{
-    font-family:'Rajdhani'; font-weight:700; color:#0A0A0D; font-size:0.85rem;
-    letter-spacing:0.05em; padding-right:40px; border-right:2px solid rgba(10,10,13,0.25);
-  }
-  @keyframes tickerScroll{
-    from{transform:translateX(0);}
-    to{transform:translateX(-50%);}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .ticker-track{animation:none;}
-  }
-
-  /* ---------- HOW IT WORKS ---------- */
-  section{padding:80px 6%;}
-  .section-head{max-width:600px; margin:0 auto 46px;}
-  .section-head h2{font-size:clamp(1.7rem,4vw,2.2rem);}
-  .section-head p{color:var(--steel); margin-top:10px;}
-
-  .how-grid{max-width:980px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,0.08);}
-  @media (max-width:760px){ .how-grid{grid-template-columns:1fr;} }
-  .how-card{background:var(--asphalt); padding:32px 26px;}
-  .how-num{font-family:'Rajdhani'; font-weight:700; color:var(--rust); font-size:1.6rem; margin-bottom:12px;}
-  .how-card h3{font-size:1.05rem; margin-bottom:8px;}
-  .how-card p{color:var(--steel); font-size:0.9rem;}
-
-  .fare-grid{max-width:900px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
-  @media (max-width:760px){ .fare-grid{grid-template-columns:1fr;} }
-  .fare-card{
-    background:var(--panel); border-radius:12px; padding:30px 24px; text-align:center;
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .fare-card.fare-highlight{border-color:var(--lime); box-shadow:0 0 0 1px var(--lime);}
-  .fare-label{font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; margin-bottom:4px;}
-  .fare-sub{color:var(--steel); font-size:0.8rem; margin-bottom:14px;}
-  .fare-price{font-family:'Rajdhani'; font-weight:700; font-size:1.6rem; color:var(--lime);}
-
-  /* ---------- WHATSAPP BAND ---------- */
-  .book-band{
-    background:var(--concrete); border-left:5px solid var(--lime);
-    max-width:900px; margin:0 auto; padding:44px 6%; display:flex; justify-content:space-between;
-    align-items:center; gap:24px; flex-wrap:wrap;
-  }
-  .book-band h2{font-size:1.5rem; margin-bottom:6px;}
-  .book-band p{color:var(--steel); max-width:400px; font-size:0.92rem;}
-
-  /* ---------- SIGNUP ---------- */
-  .signup-wrap{background:var(--panel);}
-  .signup-card{max-width:520px; margin:0 auto; background:var(--concrete); border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.08);}
-  .role-tabs{display:flex;}
-  .role-tab{
-    flex:1; text-align:center; padding:16px; font-family:'Rajdhani'; font-weight:700; font-size:1rem;
-    cursor:pointer; background:var(--asphalt); color:var(--steel); border:none;
-    border-bottom:3px solid transparent;
-  }
-  .role-tab.active-rider{color:var(--lime); border-bottom-color:var(--lime); background:var(--concrete);}
-  .role-tab.active-driver{color:var(--rust); border-bottom-color:var(--rust); background:var(--concrete);}
-
-  .signup-body{padding:32px 30px;}
-  .signup-body h2{font-size:1.3rem; margin-bottom:4px;}
-  .signup-body p.sub{color:var(--steel); font-size:0.85rem; margin-bottom:24px;}
-  label{display:block; font-size:0.75rem; color:var(--steel); margin-bottom:6px; letter-spacing:0.02em;}
-  input, select{
+  .login-card h1{font-size:1.5rem; margin-bottom:4px;}
+  .login-card p{color:var(--steel); font-size:0.85rem; margin-bottom:24px;}
+  label{display:block; font-size:0.75rem; color:var(--steel); margin-bottom:6px;}
+  input{
     width:100%; padding:12px 14px; margin-bottom:16px; border-radius:5px;
-    border:1px solid rgba(255,255,255,0.14); background:var(--asphalt); color:var(--white);
-    font-family:'Inter'; font-size:0.9rem;
+    border:1px solid rgba(255,255,255,0.14); background:var(--asphalt); color:var(--white); font-size:0.9rem;
   }
-  input:focus, select:focus{outline:2px solid var(--lime); outline-offset:1px;}
-  .driver-only{display:none;}
-  .driver-only.show{display:block;}
+  input:focus{outline:2px solid var(--lime); outline-offset:1px;}
+  #loginBtn{
+    width:100%; padding:14px; border-radius:5px; border:none; background:var(--lime); color:#0A0A0D;
+    font-family:'Rajdhani'; font-weight:700; font-size:1rem; cursor:pointer;
+  }
+  #loginError{display:none; color:var(--rust); font-size:0.82rem; margin-top:12px;}
 
-  #signupBtn{
-    width:100%; padding:15px; border-radius:5px; border:none;
-    color:#0A0A0D; font-family:'Rajdhani'; font-weight:700; font-size:1rem; cursor:pointer;
+  /* ---------- DASHBOARD ---------- */
+  #dashScreen{display:none;}
+  header.top{
+    display:flex; justify-content:space-between; align-items:center; padding:20px 5%;
+    border-bottom:1px solid rgba(255,255,255,0.07); background:var(--panel);
   }
-  #signupBtn.rider-btn{background:var(--lime);}
-  #signupBtn.driver-btn{background:var(--rust); color:#1A0A00;}
-
-  .form-note{font-size:0.75rem; color:var(--steel); margin-top:14px;}
-  .success-msg{
-    display:none; background:rgba(200,255,77,0.1); border:1px solid var(--lime); color:var(--lime);
-    padding:16px; border-radius:5px; font-size:0.9rem; margin-top:16px;
-  }
-  .error-msg{
-    display:none; background:rgba(255,107,53,0.1); border:1px solid var(--rust); color:var(--rust);
-    padding:16px; border-radius:5px; font-size:0.9rem; margin-top:16px;
+  .logo{font-family:'Rajdhani'; font-weight:700; font-size:1.2rem;}
+  .logo span{color:var(--lime);}
+  #logoutBtn{
+    background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white);
+    padding:8px 16px; border-radius:5px; cursor:pointer; font-size:0.85rem;
   }
 
-  footer{
-    text-align:center; padding:50px 6%; color:var(--steel); font-size:0.85rem;
-    border-top:1px solid rgba(255,255,255,0.07);
+  main{padding:36px 5% 70px;}
+  .stats-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:40px;}
+  .stat-card{background:var(--concrete); border-radius:6px; padding:20px; border-left:4px solid var(--lime);}
+  .stat-card.driver-stat{border-left-color:var(--rust);}
+  .stat-card .num{font-family:'Rajdhani'; font-size:2rem; font-weight:700;}
+  .stat-card .label{color:var(--steel); font-size:0.8rem; margin-top:2px;}
+
+  .panel-head{display:flex; justify-content:space-between; align-items:center; margin:36px 0 14px;}
+  .panel-head h2{font-size:1.3rem;}
+  .panel-head h2.rider-h{color:var(--lime);}
+  .panel-head h2.driver-h{color:var(--rust);}
+  .search-input{
+    background:var(--panel); border:1px solid rgba(255,255,255,0.15); color:var(--white);
+    padding:8px 14px; border-radius:5px; font-size:0.82rem; width:200px;
   }
-  footer .logo{margin-bottom:8px; justify-content:center; display:inline-flex;}
+  .search-input:focus{outline:2px solid var(--lime); outline-offset:1px;}
+
+  .log-ride-box{
+    background:var(--concrete); border-radius:8px; padding:20px; margin-bottom:20px;
+  }
+  .log-ride-row{display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap;}
+  .log-ride-row > div{flex:1; min-width:140px;}
+  .log-ride-row label{display:block; font-size:0.72rem; color:var(--steel); margin-bottom:6px;}
+  .log-ride-row select, .log-ride-row input{
+    width:100%; padding:10px 12px; border-radius:5px; border:1px solid rgba(255,255,255,0.14);
+    background:var(--asphalt); color:var(--white); font-size:0.88rem;
+  }
+  #logRideBtn{
+    background:var(--lime); color:#0A0A0D; border:none; padding:11px 22px; border-radius:5px;
+    font-family:'Rajdhani'; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  .inline-select, .inline-input{
+    background:var(--asphalt); border:1px solid rgba(255,255,255,0.14); color:var(--white);
+    padding:6px 8px; border-radius:4px; font-size:0.82rem; width:100%; min-width:110px;
+  }
+  .inline-input{width:80px; min-width:70px;}
+  .inline-select.status-requested{border-color:var(--steel); color:var(--steel);}
+  .inline-select.status-matched{border-color:#6EA8FF; color:#6EA8FF;}
+  .inline-select.status-completed{border-color:var(--lime); color:var(--lime);}
+  .inline-select.status-cancelled{border-color:var(--rust); color:var(--rust);}
+  #refreshBtn{background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:7px 14px; border-radius:5px; cursor:pointer; font-size:0.8rem;}
+
+  table{width:100%; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+  th, td{text-align:left; padding:12px 14px; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.06);}
+  th{color:var(--steel); font-weight:600; text-transform:uppercase; font-size:0.7rem; letter-spacing:0.03em; background:var(--concrete);}
+  tr:last-child td{border-bottom:none;}
+  .empty-row td{color:var(--steel); text-align:center; padding:24px;}
+
+  #toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--concrete); border:1px solid rgba(255,255,255,0.15); color:var(--white);
+    padding:14px 20px; border-radius:6px; font-size:0.85rem; max-width:90%; text-align:center;
+    opacity:0; pointer-events:none; transition:opacity 0.25s ease, transform 0.25s ease; z-index:100;
+    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  #toast.toast-error{border-color:var(--rust); color:var(--rust);}
+  #toast.toast-success{border-color:var(--lime); color:var(--lime);}
+
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--panel); border-radius:8px; padding:28px 26px; width:100%; max-width:420px;
+    border:1px solid rgba(255,255,255,0.1); max-height:90vh; overflow-y:auto;
+  }
+  .modal-box h3{font-size:1.2rem; margin-bottom:18px; font-family:'Rajdhani'; font-weight:700;}
+  .modal-box label{display:block; font-size:0.75rem; color:var(--steel); margin-bottom:6px;}
+  .modal-box input, .modal-box select{
+    width:100%; padding:10px 12px; margin-bottom:14px; border-radius:5px;
+    border:1px solid rgba(255,255,255,0.14); background:var(--asphalt); color:var(--white); font-size:0.9rem;
+  }
+  .modal-actions{display:flex; gap:10px; margin-top:6px;}
+  .modal-actions button{
+    flex:1; padding:11px; border-radius:5px; border:none; font-weight:700; cursor:pointer; font-family:'Rajdhani'; font-size:0.95rem;
+  }
+  #cancelEditBtn{background:transparent; border:1px solid rgba(255,255,255,0.25); color:var(--white);}
+  #saveEditBtn{background:var(--lime); color:#0A0A0D;}
+
+  .badge{display:inline-block; padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:600;}
+  .badge-pending{background:rgba(156,153,168,0.2); color:var(--steel);}
+  .badge-verified{background:rgba(200,255,77,0.15); color:var(--lime);}
+  .badge-rejected{background:rgba(255,107,53,0.15); color:var(--rust);}
+
+  .action-btn{
+    border:none; border-radius:4px; padding:6px 12px; font-size:0.75rem; font-weight:700;
+    cursor:pointer; margin-right:6px; font-family:'Inter';
+  }
+  .approve-btn{background:var(--lime); color:#0A0A0D;}
+  .decline-btn{background:transparent; border:1px solid var(--rust); color:var(--rust);}
+  .edit-btn{background:transparent; border:1px solid var(--steel); color:var(--white); margin-top:4px;}
+  .action-btn:disabled{opacity:0.5; cursor:default;}
+
+  .launch-box{
+    background:var(--concrete); border-radius:8px; padding:24px; margin-bottom:36px;
+    display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .launch-box h3{font-size:1.1rem; margin-bottom:4px;}
+  .launch-box p{color:var(--steel); font-size:0.85rem;}
+  #launchBtn{
+    background:var(--lime); color:#0A0A0D; border:none; padding:12px 22px; border-radius:5px;
+    font-family:'Rajdhani'; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  #copyWhatsappBtn{
+    background:transparent; border:1px solid rgba(255,255,255,0.25); color:var(--white);
+    padding:12px 18px; border-radius:5px; cursor:pointer; white-space:nowrap; font-size:0.85rem;
+  }
+  #launchStatus{font-size:0.8rem; color:var(--lime); margin-top:10px; display:none;}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">STANCE <span>PA2PB</span></div>
-  <a href="#" onclick="scrollToSection('signup'); return false;" class="nav-cta">Join the list</a>
-</nav>
-
-<div class="hero">
-  <div class="hero-inner">
-    <div>
-      <span class="hero-tag">Launching soon in South Africa</span>
-      <h1>Ride low.<br>Ride <em>loud</em>.</h1>
-      <p class="sub">The first ride-hailing app built for stance culture. Book a ride in a bagged, static, or slammed build — driven by the crews who built them.</p>
-      <div class="hero-actions">
-        <a href="#" onclick="scrollToSection('signup'); return false;" class="btn btn-lime">Join the waitlist</a>
-        <a href="#" onclick="scrollToSection('book'); return false;" class="btn btn-outline">Book a ride on WhatsApp</a>
-      </div>
-      <p id="signupCounter" class="counter-text"></p>
-    </div>
-    <div class="plate-stack">
-      <div class="plate">
-        <div class="plate-main">STANCE PA2PB</div>
-        <div class="plate-badge"></div>
-        <div class="plate-gp">GP</div>
-      </div>
-      <div class="hazard"></div>
-    </div>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>StancePA2PB <span style="color:var(--lime);">Office</span></h1>
+    <p>Sign in to view live rider and driver signups.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="loginEmail" required>
+      <label>Password</label>
+      <input type="password" id="loginPassword" required>
+      <button type="submit" id="loginBtn">Sign in</button>
+    </form>
+    <p id="loginError">Wrong email or password — try again.</p>
   </div>
 </div>
 
-<div class="ticker">
-  <div class="ticker-track">
-    <span>🔻 JOHANNESBURG</span><span>PRETORIA</span><span>CENTURION</span><span>SOWETO</span><span>VEREENIGING</span><span>THE MOVEMENT IS STARTING</span>
-    <span>🔻 JOHANNESBURG</span><span>PRETORIA</span><span>CENTURION</span><span>SOWETO</span><span>VEREENIGING</span><span>THE MOVEMENT IS STARTING</span>
-  </div>
-</div>
+<!-- DASHBOARD -->
+<div id="dashScreen">
+  <header class="top">
+    <div class="logo">StancePA2PB <span>Office</span></div>
+    <button id="logoutBtn" onclick="logout()">Sign out</button>
+  </header>
 
-<section>
-  <div class="section-head">
-    <h2>How it works right now</h2>
-    <p>We're pre-launch — every ride today is booked and matched by hand over WhatsApp, so we can prove the model before the full app goes live.</p>
-  </div>
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-num">01</div>
-      <h3>Message us your trip</h3>
-      <p>Tap the WhatsApp button, tell us your pickup, drop-off, and when you need the ride.</p>
+  <main>
+    <div class="launch-box">
+      <div>
+        <h3>Ready to launch?</h3>
+        <p>Email everyone on your list (riders + drivers) that STANCE PA2PB is live, and grab a copy-ready list of WhatsApp numbers for a broadcast.</p>
+        <p id="launchStatus"></p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="copyWhatsappBtn" onclick="copyAllWhatsapp()">Copy WhatsApp numbers</button>
+        <button id="launchBtn" onclick="sendLaunchEmails()">Email everyone: we're live</button>
+      </div>
     </div>
-    <div class="how-card">
-      <div class="how-num">02</div>
-      <h3>We match you with a crew</h3>
-      <p>A vetted stance crew nearby confirms your ride and sends you their car and ETA.</p>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="riderCount">–</div><div class="label">Riders signed up</div></div>
+      <div class="stat-card driver-stat"><div class="num" id="driverCount">–</div><div class="label">Drivers / crews signed up</div></div>
+      <div class="stat-card driver-stat"><div class="num" id="openRequestCount">–</div><div class="label">Open requests (needs matching)</div></div>
+      <div class="stat-card"><div class="num" id="rideCount">–</div><div class="label">Completed rides</div></div>
+      <div class="stat-card"><div class="num" id="revenueTotal">–</div><div class="label">Total revenue (ZAR)</div></div>
+      <div class="stat-card driver-stat"><div class="num" id="repeatRiderCount">–</div><div class="label">Repeat riders</div></div>
     </div>
-    <div class="how-card">
-      <div class="how-num">03</div>
-      <h3>You ride in style</h3>
-      <p>Pay the driver directly for now. Rate your ride so we can build the crew leaderboard.</p>
+
+    <div class="panel-head">
+      <h2 style="color:var(--white);">Rides</h2>
     </div>
-  </div>
-</section>
-
-<section>
-  <div class="section-head">
-    <h2>What a ride costs</h2>
-    <p>A rough guide so riders and crews are on the same page before the trip starts. Pay the driver directly.</p>
-  </div>
-  <div class="fare-grid">
-    <div class="fare-card">
-      <div class="fare-label">Short trip</div>
-      <div class="fare-sub">Under 5km</div>
-      <div class="fare-price">R70–R90</div>
-    </div>
-    <div class="fare-card fare-highlight">
-      <div class="fare-label">Medium trip</div>
-      <div class="fare-sub">5–15km</div>
-      <div class="fare-price">R120–R160</div>
-    </div>
-    <div class="fare-card">
-      <div class="fare-label">Long trip</div>
-      <div class="fare-sub">15km+</div>
-      <div class="fare-price">R200+</div>
-    </div>
-  </div>
-</section>
-
-<section id="book">
-  <div class="book-band">
-    <div>
-      <h2>Need a ride right now?</h2>
-      <p>Send your pickup and destination on WhatsApp and we'll match you with the nearest stance crew.</p>
-    </div>
-    <a id="bookLink" href="https://wa.me/27679503097" class="btn btn-lime" target="_blank">Book via WhatsApp</a>
-  </div>
-</section>
-
-<section class="signup-wrap" id="signup">
-  <div class="signup-card">
-    <div class="role-tabs">
-      <button type="button" class="role-tab active-rider" id="tabRider" onclick="setRole('rider')">I'm a Rider</button>
-      <button type="button" class="role-tab" id="tabDriver" onclick="setRole('driver')">I'm a Driver / Crew</button>
-    </div>
-    <div class="signup-body">
-      <h2 id="formTitle">Join as a rider</h2>
-      <p class="sub" id="formSub">Get first access when the app goes live — we'll email and WhatsApp you the moment it's ready.</p>
-
-      <form id="signupForm">
-        <label>Full name</label>
-        <input type="text" id="fName" placeholder="e.g. Kabelo Mlotshwa" required>
-
-        <label>Email</label>
-        <input type="email" id="fEmail" placeholder="e.g. you@example.com" required>
-
-        <label>WhatsApp number</label>
-        <input type="tel" id="fPhone" placeholder="e.g. 0679503097" required>
-
-        <label>City</label>
-        <input type="text" id="fCity" placeholder="e.g. Johannesburg" required>
-
-        <div class="driver-only" id="driverFields">
-          <label>Car make & model</label>
-          <input type="text" id="fCar" placeholder="e.g. VW Golf Mk5">
-
-          <label>Build style</label>
-          <select id="fBuild">
-            <option value="Bagged">Bagged</option>
-            <option value="Static">Static</option>
-            <option value="Slammed">Slammed</option>
-            <option value="Other">Other</option>
+    <div class="log-ride-box">
+      <div class="log-ride-row">
+        <div>
+          <label>Rider</label>
+          <select id="rideRiderSelect"><option value="">Select a rider...</option></select>
+        </div>
+        <div>
+          <label>Driver (leave blank until matched)</label>
+          <select id="rideDriverSelect"><option value="">Not matched yet</option></select>
+        </div>
+        <div>
+          <label>Fare (ZAR)</label>
+          <input type="number" id="rideFare" placeholder="e.g. 150">
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="rideStatus">
+            <option value="Requested">Requested</option>
+            <option value="Matched">Matched</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
         </div>
-
-        <button type="submit" id="signupBtn" class="rider-btn">Join the waitlist</button>
-      </form>
-
-      <div class="success-msg" id="successMsg">You're on the list! We'll email and WhatsApp you the moment STANCE PA2PB launches.</div>
-      <div class="error-msg" id="errorMsg">Something went wrong sending that — check your connection and try again, or message us directly on WhatsApp.</div>
-
-      <p class="form-note">Your details go straight into our launch list — no spam, just the one message when we're live.</p>
+        <button id="logRideBtn" onclick="logRide()">Log request</button>
+      </div>
     </div>
-  </div>
-</section>
+    <table>
+      <thead><tr><th>Rider</th><th>Driver</th><th>Fare (ZAR)</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody id="ridesBody"><tr class="empty-row"><td colspan="6">Loading…</td></tr></tbody>
+    </table>
 
-<footer>
-  <div class="logo">STANCE <span style="color:var(--lime);">PA2PB</span></div>
-  <p>Point A to Point Bagged 🔻 Built by Vision to Web Customs</p>
-  <p style="margin-top:14px; color:var(--white); font-weight:600;">Founded by Kabelo Mlotshwa</p>
-  <p style="margin-top:4px;">Investors &amp; partners — reach the founder directly: <a href="https://wa.me/27679503097" style="color:var(--lime); font-weight:600;">067 950 3097</a> · <a href="mailto:kabelosiyabonga2@gmail.com" style="color:var(--lime); font-weight:600;">kabelosiyabonga2@gmail.com</a></p>
-  <p style="margin-top:14px; font-size:0.8rem;"><a href="privacy.html" style="color:var(--steel);">Privacy Policy &amp; Terms</a></p>
-</footer>
+    <div class="panel-head">
+      <h2 class="rider-h">Riders</h2>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="text" id="riderSearchInput" class="search-input" placeholder="Search riders...">
+        <button id="refreshBtn" onclick="loadAll()">Refresh</button>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Signed up</th><th>Actions</th></tr></thead>
+      <tbody id="ridersBody"><tr class="empty-row"><td colspan="5">Loading…</td></tr></tbody>
+    </table>
+
+    <div class="panel-head">
+      <h2 class="driver-h">Drivers / Crews</h2>
+      <input type="text" id="driverSearchInput" class="search-input" placeholder="Search drivers...">
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Car</th><th>Build</th><th>Status</th><th>Signed up</th><th>Actions</th></tr></thead>
+      <tbody id="driversBody"><tr class="empty-row"><td colspan="9">Loading…</td></tr></tbody>
+    </table>
+  </main>
+</div>
 
 <script>
-  // ====== SUPABASE CONFIG — paste your own values here ======
+  // ====== SUPABASE CONFIG — these are safe to be public ======
   const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_PkcCpgYgR_AaBQEZP-ZxBg_nrGl6115";
   // ============================================================
+  // Your Elastic Email key is NOT here anymore — it now lives privately
+  // inside a Supabase Edge Function, never visible in this website's code.
 
-  function scrollToSection(id){
-    const el = document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:'smooth'});
+  function emailReady(){
+    return true; // sending now happens through your secure Edge Function
   }
 
-  async function loadSignupCounter(){
+  async function sendEmail(toEmail, subject, body){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ toEmail, subject, body })
+    });
+    const data = await res.json();
+    if(!data.success){
+      throw new Error(data.error || 'Send failed');
+    }
+    return data;
+  }
+
+  const loginScreen = document.getElementById('loginScreen');
+  const dashScreen = document.getElementById('dashScreen');
+
+  // Check if already logged in this session
+  window.addEventListener('DOMContentLoaded', () => {
+    const token = sessionStorage.getItem('stance_office_token');
+    if(token){ showDashboard(); }
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.style.display = 'none';
+
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_signup_counts`, {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       });
       const data = await res.json();
-      const row = Array.isArray(data) ? data[0] : data;
-      if (!row) return;
-      const total = (row.riders_count || 0) + (row.drivers_count || 0);
-      if (total > 0) {
-        document.getElementById('signupCounter').textContent =
-          `🔻 ${row.riders_count} riders and ${row.drivers_count} crews have already joined the movement`;
-      }
-    } catch(err){
-      console.error('Could not load signup counter', err);
-    }
-  }
-  loadSignupCounter();
-
-  let currentRole = 'rider';
-
-  function setRole(role){
-    currentRole = role;
-    const tabRider = document.getElementById('tabRider');
-    const tabDriver = document.getElementById('tabDriver');
-    const driverFields = document.getElementById('driverFields');
-    const btn = document.getElementById('signupBtn');
-    const title = document.getElementById('formTitle');
-    const sub = document.getElementById('formSub');
-
-    if(role === 'rider'){
-      tabRider.classList.add('active-rider'); tabDriver.classList.remove('active-driver');
-      driverFields.classList.remove('show');
-      btn.className = 'rider-btn'; btn.textContent = 'Join the waitlist';
-      title.textContent = 'Join as a rider';
-      sub.textContent = "Get first access when the app goes live — we'll email and WhatsApp you the moment it's ready.";
-    } else {
-      tabDriver.classList.add('active-driver'); tabRider.classList.remove('active-rider');
-      driverFields.classList.add('show');
-      btn.className = 'driver-btn'; btn.textContent = 'Apply as a crew';
-      title.textContent = 'Join as a stance crew';
-      sub.textContent = "Tell us about your build — we'll reach out to vet you before the app opens driver access.";
-    }
-  }
-
-  document.getElementById('signupForm').addEventListener('submit', async function(e){
-    e.preventDefault();
-    const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
-    successMsg.style.display = 'none';
-    errorMsg.style.display = 'none';
-
-    const payload = {
-      full_name: document.getElementById('fName').value.trim(),
-      email: document.getElementById('fEmail').value.trim(),
-      whatsapp_number: document.getElementById('fPhone').value.trim(),
-      city: document.getElementById('fCity').value.trim()
-    };
-
-    const table = currentRole === 'rider' ? 'riders' : 'drivers';
-    if(currentRole === 'driver'){
-      payload.car_make_model = document.getElementById('fCar').value.trim();
-      payload.build_style = document.getElementById('fBuild').value;
-    }
-
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if(res.ok){
-        successMsg.style.display = 'block';
-        document.getElementById('signupForm').reset();
+      if(data.access_token){
+        sessionStorage.setItem('stance_office_token', data.access_token);
+        showDashboard();
       } else {
-        errorMsg.style.display = 'block';
+        errorEl.style.display = 'block';
       }
     } catch(err){
-      errorMsg.style.display = 'block';
+      errorEl.style.display = 'block';
     }
   });
+
+  function showDashboard(){
+    loginScreen.style.display = 'none';
+    dashScreen.style.display = 'block';
+    loadAll();
+
+    document.getElementById('riderSearchInput').addEventListener('input', (e) => {
+      riderSearch = e.target.value;
+      renderTables();
+    });
+    document.getElementById('driverSearchInput').addEventListener('input', (e) => {
+      driverSearch = e.target.value;
+      renderTables();
+    });
+  }
+
+  function logout(){
+    sessionStorage.removeItem('stance_office_token');
+    dashScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+  }
+
+  async function fetchTable(table){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*&order=created_at.desc`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}` }
+    });
+    if(!res.ok){
+      if(res.status === 401){ logout(); }
+      return [];
+    }
+    return res.json();
+  }
+
+  function fmtDate(d){
+    if(!d) return '';
+    return new Date(d).toLocaleDateString('en-ZA', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  let ridersData = [];
+  let driversData = [];
+  let bookingsData = [];
+  let riderSearch = '';
+  let driverSearch = '';
+
+  function matchesSearch(person, query){
+    if(!query) return true;
+    const q = query.toLowerCase();
+    return [person.full_name, person.email, person.whatsapp_number, person.city, person.car_make_model, person.build_style]
+      .filter(Boolean)
+      .some(field => field.toLowerCase().includes(q));
+  }
+
+  async function loadAll(){
+    ridersData = await fetchTable('riders');
+    driversData = await fetchTable('drivers');
+    bookingsData = await fetchTable('bookings');
+    renderTables();
+    renderRideDropdowns();
+    renderRidesTable();
+    renderRideStats();
+  }
+
+  function renderTables(){
+    document.getElementById('riderCount').textContent = ridersData.length;
+    document.getElementById('driverCount').textContent = driversData.length;
+
+    const filteredRiders = ridersData.filter(r => matchesSearch(r, riderSearch));
+    const ridersBody = document.getElementById('ridersBody');
+    ridersBody.innerHTML = filteredRiders.length ? filteredRiders.map(r => `
+      <tr>
+        <td>${r.full_name || ''}</td>
+        <td>${r.email || ''}</td>
+        <td>${r.whatsapp_number || ''}</td>
+        <td>${r.city || ''}</td>
+        <td>${fmtDate(r.created_at)}</td>
+        <td>
+          <button class="action-btn edit-btn" onclick="openEditModal('rider', '${r.id}')">Edit</button>
+          <button class="action-btn decline-btn" onclick="deleteRecord('rider', '${r.id}', '${(r.full_name||'this rider').replace(/'/g, "\\'")}')">Delete</button>
+        </td>
+      </tr>`).join('') : `<tr class="empty-row"><td colspan="6">${riderSearch ? 'No matching riders.' : 'No riders yet.'}</td></tr>`;
+
+    const filteredDrivers = driversData.filter(d => matchesSearch(d, driverSearch));
+    const driversBody = document.getElementById('driversBody');
+    driversBody.innerHTML = filteredDrivers.length ? filteredDrivers.map(d => {
+      const status = d.vetting_status || 'Pending';
+      const badgeClass = status === 'Verified' ? 'badge-verified' : status === 'Rejected' ? 'badge-rejected' : 'badge-pending';
+      const isPending = status === 'Pending';
+      return `
+      <tr>
+        <td>${d.full_name || ''}</td>
+        <td>${d.email || ''}</td>
+        <td>${d.whatsapp_number || ''}</td>
+        <td>${d.city || ''}</td>
+        <td>${d.car_make_model || ''}</td>
+        <td>${d.build_style || ''}</td>
+        <td><span class="badge ${badgeClass}">${status}</span></td>
+        <td>${fmtDate(d.created_at)}</td>
+        <td>
+          <button class="action-btn approve-btn" ${isPending ? '' : 'disabled'} onclick="approveDriver('${d.id}')">Approve</button>
+          <button class="action-btn decline-btn" ${isPending ? '' : 'disabled'} onclick="declineDriver('${d.id}')">Decline</button><br>
+          <button class="action-btn edit-btn" onclick="openEditModal('driver', '${d.id}')">Edit</button>
+          <button class="action-btn decline-btn" onclick="deleteRecord('driver', '${d.id}', '${(d.full_name||'this driver').replace(/'/g, "\\'")}')">Delete</button>
+        </td>
+      </tr>`;
+    }).join('') : `<tr class="empty-row"><td colspan="9">${driverSearch ? 'No matching drivers.' : 'No drivers yet.'}</td></tr>`;
+  }
+
+  function renderRideDropdowns(){
+    const riderSelect = document.getElementById('rideRiderSelect');
+    const driverSelect = document.getElementById('rideDriverSelect');
+    const prevRider = riderSelect.value;
+    const prevDriver = driverSelect.value;
+
+    riderSelect.innerHTML = '<option value="">Select a rider...</option>' +
+      ridersData.map(r => `<option value="${r.id}">${r.full_name}</option>`).join('');
+    driverSelect.innerHTML = '<option value="">Select a driver...</option>' +
+      driversData.map(d => `<option value="${d.id}">${d.full_name}${d.vetting_status === 'Verified' ? ' ✓' : ''}</option>`).join('');
+
+    riderSelect.value = prevRider;
+    driverSelect.value = prevDriver;
+  }
+
+  function renderRidesTable(){
+    const ridesBody = document.getElementById('ridesBody');
+    const sorted = [...bookingsData].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    ridesBody.innerHTML = sorted.length ? sorted.map(b => {
+      const rider = ridersData.find(r => r.id === b.rider_id);
+      const driverOptions = ['<option value="">Not matched yet</option>']
+        .concat(driversData.map(d => `<option value="${d.id}" ${b.driver_id === d.id ? 'selected' : ''}>${d.full_name}</option>`))
+        .join('');
+      const statusOptions = ['Requested','Matched','Completed','Cancelled']
+        .map(s => `<option value="${s}" ${b.status === s ? 'selected' : ''}>${s}</option>`)
+        .join('');
+      return `
+      <tr>
+        <td>${rider ? rider.full_name : '—'}</td>
+        <td>
+          <select class="inline-select" onchange="updateBookingField('${b.id}', 'driver_id', this.value || null)">
+            ${driverOptions}
+          </select>
+        </td>
+        <td>
+          <input class="inline-input" type="number" value="${b.fare_zar != null ? b.fare_zar : ''}" placeholder="—"
+            onblur="updateBookingField('${b.id}', 'fare_zar', this.value ? Number(this.value) : null)">
+        </td>
+        <td>
+          <select class="inline-select status-${b.status.toLowerCase()}" onchange="updateBookingField('${b.id}', 'status', this.value)">
+            ${statusOptions}
+          </select>
+        </td>
+        <td>${fmtDate(b.created_at)}</td>
+        <td><button class="action-btn decline-btn" onclick="deleteBooking('${b.id}')">Delete</button></td>
+      </tr>`;
+    }).join('') : '<tr class="empty-row"><td colspan="6">No rides logged yet.</td></tr>';
+  }
+
+  function renderRideStats(){
+    const openRequests = bookingsData.filter(b => b.status === 'Requested' || b.status === 'Matched');
+    document.getElementById('openRequestCount').textContent = openRequests.length;
+
+    const completed = bookingsData.filter(b => b.status === 'Completed');
+    document.getElementById('rideCount').textContent = completed.length;
+
+    const totalRevenue = completed.reduce((sum, b) => sum + (Number(b.fare_zar) || 0), 0);
+    document.getElementById('revenueTotal').textContent = 'R' + totalRevenue.toLocaleString('en-ZA');
+
+    const riderCounts = {};
+    completed.forEach(b => {
+      if(b.rider_id) riderCounts[b.rider_id] = (riderCounts[b.rider_id] || 0) + 1;
+    });
+    const repeatRiders = Object.values(riderCounts).filter(count => count > 1).length;
+    document.getElementById('repeatRiderCount').textContent = repeatRiders;
+  }
+
+  async function updateBookingField(id, field, value){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ [field]: value })
+    });
+
+    if(!res.ok){
+      showToast('Could not save that change — check your connection and try again.', 'error');
+      return;
+    }
+
+    const booking = bookingsData.find(b => b.id === id);
+    if(booking) booking[field] = value;
+    showToast('Ride updated.', 'success');
+    renderRideStats();
+  }
+
+  async function logRide(){
+    const riderId = document.getElementById('rideRiderSelect').value;
+    const driverId = document.getElementById('rideDriverSelect').value;
+    const fare = document.getElementById('rideFare').value;
+    const status = document.getElementById('rideStatus').value;
+
+    if(!riderId){
+      showToast('Pick a rider before logging the request.', 'error');
+      return;
+    }
+
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        rider_id: riderId,
+        driver_id: driverId || null,
+        fare_zar: fare ? Number(fare) : null,
+        status: status
+      })
+    });
+
+    if(!res.ok){
+      showToast('Could not log that request — check your connection and try again.', 'error');
+      return;
+    }
+
+    showToast('Request logged.', 'success');
+    document.getElementById('rideFare').value = '';
+    document.getElementById('rideRiderSelect').value = '';
+    document.getElementById('rideDriverSelect').value = '';
+    document.getElementById('rideStatus').value = 'Requested';
+
+    bookingsData = await fetchTable('bookings');
+    renderRidesTable();
+    renderRideStats();
+  }
+
+  async function deleteBooking(id){
+    if(!confirm('Delete this ride record?')) return;
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if(!res.ok){
+      showToast('Could not delete — check your connection and try again.', 'error');
+      return;
+    }
+
+    showToast('Ride record deleted.');
+    bookingsData = await fetchTable('bookings');
+    renderRidesTable();
+    renderRideStats();
+  }
+
+  async function updateDriverStatus(id, status){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ vetting_status: status })
+    });
+    return res.ok;
+  }
+
+  function showToast(message, type){
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = type ? `show toast-${type}` : 'show';
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => { toast.classList.remove('show'); }, 4000);
+  }
+
+  async function refreshKeepingScroll(){
+    const scrollY = window.scrollY;
+    await loadAll();
+    window.scrollTo(0, scrollY);
+  }
+
+  async function approveDriver(id){
+    const driver = driversData.find(d => d.id === id);
+    if(!driver) return;
+    const ok = await updateDriverStatus(id, 'Verified');
+    if(!ok){ showToast('Could not update status — check your connection and try again.', 'error'); return; }
+
+    if (emailReady()) {
+      try {
+        await sendEmail(
+          driver.email,
+          "You're verified — welcome to STANCE PA2PB",
+          `Hi ${driver.full_name},\n\nGood news — your build and details have been reviewed and you're now a verified STANCE PA2PB crew. You'll be first in line for ride requests when the app opens driver access.\n\nWe'll be in touch on WhatsApp with next steps.\n\n— STANCE PA2PB`
+        );
+        showToast(`${driver.full_name} approved and emailed successfully.`, 'success');
+      } catch(err){
+        console.error('Email send failed', err);
+        showToast(`${driver.full_name} approved, but the email failed to send. You can still message them on WhatsApp.`, 'error');
+      }
+    } else {
+      showToast(`${driver.full_name} approved.`, 'success');
+    }
+    refreshKeepingScroll();
+  }
+
+  async function declineDriver(id){
+    const driver = driversData.find(d => d.id === id);
+    const ok = await updateDriverStatus(id, 'Rejected');
+    if(!ok){ showToast('Could not update status — check your connection and try again.', 'error'); return; }
+    showToast(`${driver ? driver.full_name : 'Driver'} declined.`);
+    refreshKeepingScroll();
+  }
+
+  let editingType = null;
+  let editingId = null;
+
+  function openEditModal(type, id){
+    const record = (type === 'rider' ? ridersData : driversData).find(p => p.id === id);
+    if(!record) return;
+    editingType = type;
+    editingId = id;
+
+    document.getElementById('editModalTitle').textContent = `Edit ${type === 'rider' ? 'Rider' : 'Driver'}`;
+    document.getElementById('editFullName').value = record.full_name || '';
+    document.getElementById('editEmail').value = record.email || '';
+    document.getElementById('editWhatsapp').value = record.whatsapp_number || '';
+    document.getElementById('editCity').value = record.city || '';
+
+    const driverFields = document.getElementById('editDriverFields');
+    if(type === 'driver'){
+      driverFields.style.display = 'block';
+      document.getElementById('editCar').value = record.car_make_model || '';
+      document.getElementById('editBuild').value = record.build_style || 'Bagged';
+    } else {
+      driverFields.style.display = 'none';
+    }
+
+    document.getElementById('editModalOverlay').classList.add('show');
+  }
+
+  function closeEditModal(){
+    document.getElementById('editModalOverlay').classList.remove('show');
+    editingType = null;
+    editingId = null;
+  }
+
+  async function saveEdit(){
+    if(!editingType || !editingId) return;
+    const table = editingType === 'rider' ? 'riders' : 'drivers';
+    const payload = {
+      full_name: document.getElementById('editFullName').value.trim(),
+      email: document.getElementById('editEmail').value.trim(),
+      whatsapp_number: document.getElementById('editWhatsapp').value.trim(),
+      city: document.getElementById('editCity').value.trim()
+    };
+    if(editingType === 'driver'){
+      payload.car_make_model = document.getElementById('editCar').value.trim();
+      payload.build_style = document.getElementById('editBuild').value;
+    }
+
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${editingId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){
+      showToast('Could not save changes — check your connection and try again.', 'error');
+      return;
+    }
+
+    showToast('Changes saved.', 'success');
+    closeEditModal();
+    refreshKeepingScroll();
+  }
+
+  async function deleteRecord(type, id, name){
+    if(!confirm(`Delete ${name}? This can't be undone.`)) return;
+    const table = type === 'rider' ? 'riders' : 'drivers';
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if(!res.ok){
+      showToast('Could not delete — check your connection and try again.', 'error');
+      return;
+    }
+
+    showToast(`${name} deleted.`);
+    refreshKeepingScroll();
+  }
+
+  function copyAllWhatsapp(){
+    const numbers = [...ridersData, ...driversData].map(p => p.whatsapp_number).filter(Boolean).join(', ');
+    navigator.clipboard.writeText(numbers).then(() => {
+      const statusEl = document.getElementById('launchStatus');
+      statusEl.textContent = `Copied ${[...ridersData, ...driversData].length} WhatsApp numbers to your clipboard.`;
+      statusEl.style.display = 'block';
+    });
+  }
+
+  async function sendLaunchEmails(){
+    if (!emailReady()) {
+      showToast('Email isn\'t set up yet — check your Edge Function and secrets are configured.', 'error');
+      return;
+    }
+    const everyone = [...ridersData, ...driversData].filter(p => p.email);
+    const statusEl = document.getElementById('launchStatus');
+    statusEl.style.display = 'block';
+    let sent = 0;
+    for (const person of everyone) {
+      try {
+        await sendEmail(
+          person.email,
+          "STANCE PA2PB is live 🔻",
+          `Hi ${person.full_name},\n\nWe're live. Open the app and take your first ride low, ride loud.\n\n— STANCE PA2PB`
+        );
+        sent++;
+        statusEl.textContent = `Sending... ${sent}/${everyone.length} emails sent.`;
+      } catch(err){
+        console.error('Failed to send to', person.email, err);
+      }
+    }
+    statusEl.textContent = `Done — sent to ${sent} of ${everyone.length} people.`;
+  }
 </script>
+
+<div id="toast"></div>
+
+<div id="editModalOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <h3 id="editModalTitle">Edit</h3>
+    <label>Full name</label>
+    <input type="text" id="editFullName">
+    <label>Email</label>
+    <input type="email" id="editEmail">
+    <label>WhatsApp number</label>
+    <input type="text" id="editWhatsapp">
+    <label>City</label>
+    <input type="text" id="editCity">
+    <div id="editDriverFields">
+      <label>Car make & model</label>
+      <input type="text" id="editCar">
+      <label>Build style</label>
+      <select id="editBuild">
+        <option value="Bagged">Bagged</option>
+        <option value="Static">Static</option>
+        <option value="Slammed">Slammed</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button id="cancelEditBtn" onclick="closeEditModal()">Cancel</button>
+      <button id="saveEditBtn" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
