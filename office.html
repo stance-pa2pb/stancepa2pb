@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StancePA2PB Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0A0A0D;
+    --panel:#151319;
+    --concrete:#201E26;
+    --lime:#C8FF4D;
+    --rust:#FF6B35;
+    --steel:#9C99A8;
+    --white:#F3F2F6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Inter',sans-serif; background:var(--asphalt); color:var(--white); min-height:100vh;}
+  h1,h2,h3{font-family:'Rajdhani',sans-serif; font-weight:700;}
+
+  /* ---------- LOGIN ---------- */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .login-card{
+    width:100%; max-width:380px; background:var(--panel); border:1px solid rgba(255,255,255,0.08);
+    border-radius:8px; padding:36px 30px; border-top:4px solid var(--lime);
+  }
+  .login-card h1{font-size:1.5rem; margin-bottom:4px;}
+  .login-card p{color:var(--steel); font-size:0.85rem; margin-bottom:24px;}
+  label{display:block; font-size:0.75rem; color:var(--steel); margin-bottom:6px;}
+  input{
+    width:100%; padding:12px 14px; margin-bottom:16px; border-radius:5px;
+    border:1px solid rgba(255,255,255,0.14); background:var(--asphalt); color:var(--white); font-size:0.9rem;
+  }
+  input:focus{outline:2px solid var(--lime); outline-offset:1px;}
+  #loginBtn{
+    width:100%; padding:14px; border-radius:5px; border:none; background:var(--lime); color:#0A0A0D;
+    font-family:'Rajdhani'; font-weight:700; font-size:1rem; cursor:pointer;
+  }
+  #loginError{display:none; color:var(--rust); font-size:0.82rem; margin-top:12px;}
+
+  /* ---------- DASHBOARD ---------- */
+  #dashScreen{display:none;}
+  header.top{
+    display:flex; justify-content:space-between; align-items:center; padding:20px 5%;
+    border-bottom:1px solid rgba(255,255,255,0.07); background:var(--panel);
+  }
+  .logo{font-family:'Rajdhani'; font-weight:700; font-size:1.2rem;}
+  .logo span{color:var(--lime);}
+  #logoutBtn{
+    background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white);
+    padding:8px 16px; border-radius:5px; cursor:pointer; font-size:0.85rem;
+  }
+
+  main{padding:36px 5% 70px;}
+  .stats-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:40px;}
+  .stat-card{background:var(--concrete); border-radius:6px; padding:20px; border-left:4px solid var(--lime);}
+  .stat-card.driver-stat{border-left-color:var(--rust);}
+  .stat-card .num{font-family:'Rajdhani'; font-size:2rem; font-weight:700;}
+  .stat-card .label{color:var(--steel); font-size:0.8rem; margin-top:2px;}
+
+  .panel-head{display:flex; justify-content:space-between; align-items:center; margin:36px 0 14px;}
+  .panel-head h2{font-size:1.3rem;}
+  .panel-head h2.rider-h{color:var(--lime);}
+  .panel-head h2.driver-h{color:var(--rust);}
+  #refreshBtn{background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:7px 14px; border-radius:5px; cursor:pointer; font-size:0.8rem;}
+
+  table{width:100%; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+  th, td{text-align:left; padding:12px 14px; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.06);}
+  th{color:var(--steel); font-weight:600; text-transform:uppercase; font-size:0.7rem; letter-spacing:0.03em; background:var(--concrete);}
+  tr:last-child td{border-bottom:none;}
+  .empty-row td{color:var(--steel); text-align:center; padding:24px;}
+
+  .badge{display:inline-block; padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:600;}
+  .badge-pending{background:rgba(156,153,168,0.2); color:var(--steel);}
+  .badge-verified{background:rgba(200,255,77,0.15); color:var(--lime);}
+  .badge-rejected{background:rgba(255,107,53,0.15); color:var(--rust);}
+
+  .action-btn{
+    border:none; border-radius:4px; padding:6px 12px; font-size:0.75rem; font-weight:700;
+    cursor:pointer; margin-right:6px; font-family:'Inter';
+  }
+  .approve-btn{background:var(--lime); color:#0A0A0D;}
+  .decline-btn{background:transparent; border:1px solid var(--rust); color:var(--rust);}
+  .action-btn:disabled{opacity:0.5; cursor:default;}
+
+  .launch-box{
+    background:var(--concrete); border-radius:8px; padding:24px; margin-bottom:36px;
+    display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .launch-box h3{font-size:1.1rem; margin-bottom:4px;}
+  .launch-box p{color:var(--steel); font-size:0.85rem;}
+  #launchBtn{
+    background:var(--lime); color:#0A0A0D; border:none; padding:12px 22px; border-radius:5px;
+    font-family:'Rajdhani'; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  #copyWhatsappBtn{
+    background:transparent; border:1px solid rgba(255,255,255,0.25); color:var(--white);
+    padding:12px 18px; border-radius:5px; cursor:pointer; white-space:nowrap; font-size:0.85rem;
+  }
+  #launchStatus{font-size:0.8rem; color:var(--lime); margin-top:10px; display:none;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>StancePA2PB <span style="color:var(--lime);">Office</span></h1>
+    <p>Sign in to view live rider and driver signups.</p>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="loginEmail" required>
+      <label>Password</label>
+      <input type="password" id="loginPassword" required>
+      <button type="submit" id="loginBtn">Sign in</button>
+    </form>
+    <p id="loginError">Wrong email or password — try again.</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashScreen">
+  <header class="top">
+    <div class="logo">StancePA2PB <span>Office</span></div>
+    <button id="logoutBtn" onclick="logout()">Sign out</button>
+  </header>
+
+  <main>
+    <div class="launch-box">
+      <div>
+        <h3>Ready to launch?</h3>
+        <p>Email everyone on your list (riders + drivers) that STANCE PA2PB is live, and grab a copy-ready list of WhatsApp numbers for a broadcast.</p>
+        <p id="launchStatus"></p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="copyWhatsappBtn" onclick="copyAllWhatsapp()">Copy WhatsApp numbers</button>
+        <button id="launchBtn" onclick="sendLaunchEmails()">Email everyone: we're live</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="riderCount">–</div><div class="label">Riders signed up</div></div>
+      <div class="stat-card driver-stat"><div class="num" id="driverCount">–</div><div class="label">Drivers / crews signed up</div></div>
+    </div>
+
+    <div class="panel-head">
+      <h2 class="rider-h">Riders</h2>
+      <button id="refreshBtn" onclick="loadAll()">Refresh</button>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Signed up</th></tr></thead>
+      <tbody id="ridersBody"><tr class="empty-row"><td colspan="5">Loading…</td></tr></tbody>
+    </table>
+
+    <div class="panel-head">
+      <h2 class="driver-h">Drivers / Crews</h2>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Car</th><th>Build</th><th>Status</th><th>Signed up</th><th>Actions</th></tr></thead>
+      <tbody id="driversBody"><tr class="empty-row"><td colspan="9">Loading…</td></tr></tbody>
+    </table>
+  </main>
+</div>
+
+<script>
+  // ====== SUPABASE CONFIG — these are safe to be public ======
+  const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_PkcCpgYgR_AaBQEZP-ZxBg_nrGl6115";
+  // ============================================================
+  // Your Elastic Email key is NOT here anymore — it now lives privately
+  // inside a Supabase Edge Function, never visible in this website's code.
+
+  function emailReady(){
+    return true; // sending now happens through your secure Edge Function
+  }
+
+  async function sendEmail(toEmail, subject, body){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ toEmail, subject, body })
+    });
+    const data = await res.json();
+    if(!data.success){
+      throw new Error(data.error || 'Send failed');
+    }
+    return data;
+  }
+
+  const loginScreen = document.getElementById('loginScreen');
+  const dashScreen = document.getElementById('dashScreen');
+
+  // Check if already logged in this session
+  window.addEventListener('DOMContentLoaded', () => {
+    const token = sessionStorage.getItem('stance_office_token');
+    if(token){ showDashboard(); }
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.style.display = 'none';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if(data.access_token){
+        sessionStorage.setItem('stance_office_token', data.access_token);
+        showDashboard();
+      } else {
+        errorEl.style.display = 'block';
+      }
+    } catch(err){
+      errorEl.style.display = 'block';
+    }
+  });
+
+  function showDashboard(){
+    loginScreen.style.display = 'none';
+    dashScreen.style.display = 'block';
+    loadAll();
+  }
+
+  function logout(){
+    sessionStorage.removeItem('stance_office_token');
+    dashScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+  }
+
+  async function fetchTable(table){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*&order=created_at.desc`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}` }
+    });
+    if(!res.ok){
+      if(res.status === 401){ logout(); }
+      return [];
+    }
+    return res.json();
+  }
+
+  function fmtDate(d){
+    if(!d) return '';
+    return new Date(d).toLocaleDateString('en-ZA', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  let ridersData = [];
+  let driversData = [];
+
+  async function loadAll(){
+    ridersData = await fetchTable('riders');
+    driversData = await fetchTable('drivers');
+
+    document.getElementById('riderCount').textContent = ridersData.length;
+    document.getElementById('driverCount').textContent = driversData.length;
+
+    const ridersBody = document.getElementById('ridersBody');
+    ridersBody.innerHTML = ridersData.length ? ridersData.map(r => `
+      <tr>
+        <td>${r.full_name || ''}</td>
+        <td>${r.email || ''}</td>
+        <td>${r.whatsapp_number || ''}</td>
+        <td>${r.city || ''}</td>
+        <td>${fmtDate(r.created_at)}</td>
+      </tr>`).join('') : '<tr class="empty-row"><td colspan="5">No riders yet.</td></tr>';
+
+    const driversBody = document.getElementById('driversBody');
+    driversBody.innerHTML = driversData.length ? driversData.map(d => {
+      const status = d.vetting_status || 'Pending';
+      const badgeClass = status === 'Verified' ? 'badge-verified' : status === 'Rejected' ? 'badge-rejected' : 'badge-pending';
+      const isPending = status === 'Pending';
+      return `
+      <tr>
+        <td>${d.full_name || ''}</td>
+        <td>${d.email || ''}</td>
+        <td>${d.whatsapp_number || ''}</td>
+        <td>${d.city || ''}</td>
+        <td>${d.car_make_model || ''}</td>
+        <td>${d.build_style || ''}</td>
+        <td><span class="badge ${badgeClass}">${status}</span></td>
+        <td>${fmtDate(d.created_at)}</td>
+        <td>
+          <button class="action-btn approve-btn" ${isPending ? '' : 'disabled'} onclick="approveDriver('${d.id}')">Approve</button>
+          <button class="action-btn decline-btn" ${isPending ? '' : 'disabled'} onclick="declineDriver('${d.id}')">Decline</button>
+        </td>
+      </tr>`;
+    }).join('') : '<tr class="empty-row"><td colspan="9">No drivers yet.</td></tr>';
+  }
+
+  async function updateDriverStatus(id, status){
+    const token = sessionStorage.getItem('stance_office_token');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ vetting_status: status })
+    });
+    return res.ok;
+  }
+
+  async function approveDriver(id){
+    const driver = driversData.find(d => d.id === id);
+    if(!driver) return;
+    const ok = await updateDriverStatus(id, 'Verified');
+    if(!ok){ alert('Could not update status — check your connection and try again.'); return; }
+
+    if (emailReady()) {
+      try {
+        await sendEmail(
+          driver.email,
+          "You're verified — welcome to STANCE PA2PB",
+          `Hi ${driver.full_name},\n\nGood news — your build and details have been reviewed and you're now a verified STANCE PA2PB crew. You'll be first in line for ride requests when the app opens driver access.\n\nWe'll be in touch on WhatsApp with next steps.\n\n— STANCE PA2PB`
+        );
+      } catch(err){
+        console.error('Email send failed', err);
+        alert('Driver approved, but the approval email failed to send. You can still message them directly on WhatsApp.');
+      }
+    }
+    loadAll();
+  }
+
+  async function declineDriver(id){
+    const ok = await updateDriverStatus(id, 'Rejected');
+    if(!ok){ alert('Could not update status — check your connection and try again.'); return; }
+    loadAll();
+  }
+
+  function copyAllWhatsapp(){
+    const numbers = [...ridersData, ...driversData].map(p => p.whatsapp_number).filter(Boolean).join(', ');
+    navigator.clipboard.writeText(numbers).then(() => {
+      const statusEl = document.getElementById('launchStatus');
+      statusEl.textContent = `Copied ${[...ridersData, ...driversData].length} WhatsApp numbers to your clipboard.`;
+      statusEl.style.display = 'block';
+    });
+  }
+
+  async function sendLaunchEmails(){
+    if (!emailReady()) {
+      alert('Email isn\'t set up yet — paste your smtp.js Secure Token and sender email into the script section of this file first.');
+      return;
+    }
+    const everyone = [...ridersData, ...driversData].filter(p => p.email);
+    const statusEl = document.getElementById('launchStatus');
+    statusEl.style.display = 'block';
+    let sent = 0;
+    for (const person of everyone) {
+      try {
+        await sendEmail(
+          person.email,
+          "STANCE PA2PB is live 🔻",
+          `Hi ${person.full_name},\n\nWe're live. Open the app and take your first ride low, ride loud.\n\n— STANCE PA2PB`
+        );
+        sent++;
+        statusEl.textContent = `Sending... ${sent}/${everyone.length} emails sent.`;
+      } catch(err){
+        console.error('Failed to send to', person.email, err);
+      }
+    }
+    statusEl.textContent = `Done — sent to ${sent} of ${everyone.length} people.`;
+  }
+</script>
+
+</body>
+</html>
