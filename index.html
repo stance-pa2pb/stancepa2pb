@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STANCE PA2PB — Ride Low. Ride Loud.</title>
+<meta name="description" content="The first ride-hailing app built for stance culture. Book a ride in a bagged, static, or slammed build — driven by the crews who built them.">
+<meta property="og:title" content="STANCE PA2PB — Ride Low. Ride Loud.">
+<meta property="og:description" content="The first ride-hailing app built for stance culture, launching soon in South Africa.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0A0D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%230A0A0D'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='%23C8FF4D' font-family='Arial' font-weight='bold'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -59,6 +65,7 @@
   .hero h1 em{font-style:normal; color:var(--lime);}
   .hero p.sub{margin:22px 0 0; max-width:460px; color:var(--steel); font-size:1.08rem;}
   .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-top:34px;}
+  .counter-text{margin-top:18px; color:var(--lime); font-size:0.85rem; font-weight:600; min-height:20px;}
   .btn{
     padding:15px 26px; border-radius:4px; font-weight:700; font-size:0.92rem;
     display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;
@@ -145,6 +152,17 @@
   .how-card h3{font-size:1.05rem; margin-bottom:8px;}
   .how-card p{color:var(--steel); font-size:0.9rem;}
 
+  .fare-grid{max-width:900px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:760px){ .fare-grid{grid-template-columns:1fr;} }
+  .fare-card{
+    background:var(--panel); border-radius:12px; padding:30px 24px; text-align:center;
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .fare-card.fare-highlight{border-color:var(--lime); box-shadow:0 0 0 1px var(--lime);}
+  .fare-label{font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; margin-bottom:4px;}
+  .fare-sub{color:var(--steel); font-size:0.8rem; margin-bottom:14px;}
+  .fare-price{font-family:'Rajdhani'; font-weight:700; font-size:1.6rem; color:var(--lime);}
+
   /* ---------- WHATSAPP BAND ---------- */
   .book-band{
     background:var(--concrete); border-left:5px solid var(--lime);
@@ -220,6 +238,7 @@
         <a href="#" onclick="scrollToSection('signup'); return false;" class="btn btn-lime">Join the waitlist</a>
         <a href="#" onclick="scrollToSection('book'); return false;" class="btn btn-outline">Book a ride on WhatsApp</a>
       </div>
+      <p id="signupCounter" class="counter-text"></p>
     </div>
     <div class="plate-stack">
       <div class="plate">
@@ -259,6 +278,30 @@
       <div class="how-num">03</div>
       <h3>You ride in style</h3>
       <p>Pay the driver directly for now. Rate your ride so we can build the crew leaderboard.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>What a ride costs</h2>
+    <p>A rough guide so riders and crews are on the same page before the trip starts. Pay the driver directly.</p>
+  </div>
+  <div class="fare-grid">
+    <div class="fare-card">
+      <div class="fare-label">Short trip</div>
+      <div class="fare-sub">Under 5km</div>
+      <div class="fare-price">R70–R90</div>
+    </div>
+    <div class="fare-card fare-highlight">
+      <div class="fare-label">Medium trip</div>
+      <div class="fare-sub">5–15km</div>
+      <div class="fare-price">R120–R160</div>
+    </div>
+    <div class="fare-card">
+      <div class="fare-label">Long trip</div>
+      <div class="fare-sub">15km+</div>
+      <div class="fare-price">R200+</div>
     </div>
   </div>
 </section>
@@ -325,6 +368,7 @@
   <p>Point A to Point Bagged 🔻 Built by Vision to Web Customs</p>
   <p style="margin-top:14px; color:var(--white); font-weight:600;">Founded by Kabelo Mlotshwa</p>
   <p style="margin-top:4px;">Investors &amp; partners — reach the founder directly: <a href="https://wa.me/27679503097" style="color:var(--lime); font-weight:600;">067 950 3097</a> · <a href="mailto:kabelosiyabonga2@gmail.com" style="color:var(--lime); font-weight:600;">kabelosiyabonga2@gmail.com</a></p>
+  <p style="margin-top:14px; font-size:0.8rem;"><a href="privacy.html" style="color:var(--steel);">Privacy Policy &amp; Terms</a></p>
 </footer>
 
 <script>
@@ -337,6 +381,31 @@
     const el = document.getElementById(id);
     if(el) el.scrollIntoView({behavior:'smooth'});
   }
+
+  async function loadSignupCounter(){
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_signup_counts`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) return;
+      const total = (row.riders_count || 0) + (row.drivers_count || 0);
+      if (total > 0) {
+        document.getElementById('signupCounter').textContent =
+          `🔻 ${row.riders_count} riders and ${row.drivers_count} crews have already joined the movement`;
+      }
+    } catch(err){
+      console.error('Could not load signup counter', err);
+    }
+  }
+  loadSignupCounter();
 
   let currentRole = 'rider';
 
