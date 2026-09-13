@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STANCE PA2PB — Get a Ride</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0A0A0D; --panel:#151319; --concrete:#201E26;
+    --lime:#C8FF4D; --rust:#FF6B35; --steel:#9C99A8; --white:#F3F2F6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Inter',sans-serif; background:var(--asphalt); color:var(--white);
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  h1,h2,h3{font-family:'Rajdhani',sans-serif; font-weight:700;}
+
+  header{
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .logo{font-family:'Rajdhani'; font-weight:700; font-size:1.2rem;}
+  .logo span{color:var(--lime);}
+
+  main{flex:1; max-width:440px; margin:0 auto; width:100%; padding:28px 20px 60px;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  h2{font-size:1.4rem; margin-bottom:6px;}
+  .sub{color:var(--steel); font-size:0.88rem; margin-bottom:24px;}
+
+  label{display:block; font-size:0.75rem; color:var(--steel); margin-bottom:6px;}
+  input{
+    width:100%; padding:13px 14px; margin-bottom:16px; border-radius:8px;
+    border:1px solid rgba(255,255,255,0.14); background:var(--panel); color:var(--white); font-size:0.95rem;
+  }
+  input:focus{outline:2px solid var(--lime); outline-offset:1px;}
+
+  .btn{
+    width:100%; padding:16px; border-radius:10px; border:none; font-family:'Rajdhani'; font-weight:700;
+    font-size:1.05rem; cursor:pointer; background:var(--lime); color:#0A0A0D;
+  }
+  .btn-outline{background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white); margin-top:10px;}
+
+  /* waiting/status screen */
+  .status-box{
+    background:var(--panel); border-radius:16px; padding:32px 24px; text-align:center;
+  }
+  .pulse-dot{
+    width:16px; height:16px; border-radius:50%; background:var(--lime); margin:0 auto 20px;
+    box-shadow:0 0 0 8px rgba(200,255,77,0.15); animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 8px rgba(200,255,77,0.15);} 50%{box-shadow:0 0 0 14px rgba(200,255,77,0.05);}}
+  .status-box h3{font-size:1.15rem; margin-bottom:6px;}
+  .status-box p{color:var(--steel); font-size:0.85rem;}
+
+  .trip-detail{background:var(--concrete); border-radius:10px; padding:16px 18px; margin-top:20px; text-align:left;}
+  .trip-row{display:flex; justify-content:space-between; font-size:0.85rem; padding:6px 0; color:var(--steel);}
+  .trip-row span:last-child{color:var(--white); font-weight:600;}
+
+  /* matched screen */
+  .driver-card{
+    background:var(--concrete); border-radius:16px; padding:22px; margin-bottom:18px;
+  }
+  .driver-row{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+  .driver-avatar{
+    width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg, var(--lime), #8FCF1E);
+    display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; color:#0A0A0D;
+  }
+  .driver-details h3{font-size:1.05rem;}
+  .driver-details p{color:var(--steel); font-size:0.8rem; margin-top:2px;}
+  .whatsapp-btn{
+    display:block; width:100%; text-align:center; padding:15px; border-radius:10px;
+    background:#25D366; color:#fff; font-family:'Rajdhani'; font-weight:700; font-size:1rem;
+    text-decoration:none; margin-top:6px;
+  }
+
+  .completed-badge{
+    width:70px; height:70px; border-radius:50%; background:rgba(200,255,77,0.1);
+    display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 20px;
+    border:2px solid var(--lime);
+  }
+  .center{text-align:center;}
+  .error-msg{display:none; color:var(--rust); font-size:0.85rem; margin-top:-6px; margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">STANCE <span>PA2PB</span></div>
+</header>
+
+<main>
+
+  <!-- SCREEN 1: REQUEST A RIDE -->
+  <div class="screen active" id="screen-request">
+    <h2>Where you headed?</h2>
+    <p class="sub">Tell us your trip — we'll match you with a nearby stance crew.</p>
+
+    <label>Your name</label>
+    <input type="text" id="reqName" placeholder="e.g. Kabelo Mlotshwa">
+
+    <label>WhatsApp number</label>
+    <input type="tel" id="reqWhatsapp" placeholder="e.g. 0679503097">
+
+    <label>Pickup location</label>
+    <input type="text" id="reqPickup" placeholder="e.g. Sandton Gautrain Station">
+
+    <label>Drop-off location</label>
+    <input type="text" id="reqDropoff" placeholder="e.g. Melrose Arch">
+
+    <p class="error-msg" id="requestError">Please fill in all fields before requesting.</p>
+
+    <button class="btn" onclick="submitRequest()">Find a Stance Ride 🔻</button>
+  </div>
+
+  <!-- SCREEN 2: WAITING FOR MATCH -->
+  <div class="screen" id="screen-waiting">
+    <div class="status-box">
+      <div class="pulse-dot"></div>
+      <h3>Finding you a crew...</h3>
+      <p>Sit tight — we're matching you with a nearby verified stance crew. This page will update automatically.</p>
+      <div class="trip-detail">
+        <div class="trip-row"><span>Pickup</span><span id="waitPickup">—</span></div>
+        <div class="trip-row"><span>Drop-off</span><span id="waitDropoff">—</span></div>
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="startOver()">Request a different ride</button>
+  </div>
+
+  <!-- SCREEN 3: MATCHED -->
+  <div class="screen" id="screen-matched">
+    <h2>You're matched! 🔻</h2>
+    <p class="sub">Your crew is confirmed for this ride.</p>
+    <div class="driver-card">
+      <div class="driver-row">
+        <div class="driver-avatar">🚗</div>
+        <div class="driver-details">
+          <h3 id="matchedDriverName">—</h3>
+          <p id="matchedDriverCar">—</p>
+        </div>
+      </div>
+      <div class="trip-detail">
+        <div class="trip-row"><span>Pickup</span><span id="matchedPickup">—</span></div>
+        <div class="trip-row"><span>Drop-off</span><span id="matchedDropoff">—</span></div>
+        <div class="trip-row" id="matchedFareRow" style="display:none;"><span>Fare</span><span id="matchedFare">—</span></div>
+      </div>
+      <a href="#" id="matchedWhatsappBtn" class="whatsapp-btn" target="_blank">💬 Message your driver</a>
+    </div>
+    <p class="sub" style="text-align:center;">Pay the driver directly when your ride is complete.</p>
+  </div>
+
+  <!-- SCREEN 4: COMPLETED -->
+  <div class="screen" id="screen-completed">
+    <div class="center">
+      <div class="completed-badge">✅</div>
+      <h2>Ride complete</h2>
+      <p class="sub">Thanks for riding with STANCE PA2PB. Ride low, ride loud.</p>
+      <button class="btn" onclick="startOver()">Request another ride</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: CANCELLED -->
+  <div class="screen" id="screen-cancelled">
+    <div class="center">
+      <h2>Ride cancelled</h2>
+      <p class="sub">This ride request was cancelled. You can request a new one anytime.</p>
+      <button class="btn" onclick="startOver()">Request a new ride</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ====== SUPABASE CONFIG ======
+  const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_PkcCpgYgR_AaBQEZP-ZxBg_nrGl6115";
+  // ==============================
+
+  let pollTimer = null;
+
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function getRideIdFromUrl(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get('ride');
+  }
+
+  function setRideId(id){
+    const url = new URL(window.location);
+    url.searchParams.set('ride', id);
+    window.history.replaceState({}, '', url);
+    localStorage.setItem('stance_last_ride', id);
+  }
+
+  async function submitRequest(){
+    const name = document.getElementById('reqName').value.trim();
+    const whatsapp = document.getElementById('reqWhatsapp').value.trim();
+    const pickup = document.getElementById('reqPickup').value.trim();
+    const dropoff = document.getElementById('reqDropoff').value.trim();
+    const errorEl = document.getElementById('requestError');
+
+    if(!name || !whatsapp || !pickup || !dropoff){
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+
+    const bookingId = crypto.randomUUID();
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          id: bookingId,
+          rider_name: name,
+          rider_whatsapp: whatsapp,
+          pickup: pickup,
+          dropoff: dropoff,
+          status: 'Requested'
+        })
+      });
+
+      if(!res.ok){
+        errorEl.textContent = "Something went wrong sending that — check your connection and try again.";
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      setRideId(bookingId);
+      document.getElementById('waitPickup').textContent = pickup;
+      document.getElementById('waitDropoff').textContent = dropoff;
+      showScreen('screen-waiting');
+      startPolling(bookingId);
+
+    } catch(err){
+      errorEl.textContent = "Something went wrong sending that — check your connection and try again.";
+      errorEl.style.display = 'block';
+    }
+  }
+
+  async function checkStatus(bookingId){
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_booking_status`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ p_booking_id: bookingId })
+      });
+      const data = await res.json();
+      const ride = Array.isArray(data) ? data[0] : data;
+      if(!ride) return;
+      renderRideState(ride);
+    } catch(err){
+      console.error('Could not check ride status', err);
+    }
+  }
+
+  function renderRideState(ride){
+    if(ride.status === 'Requested'){
+      document.getElementById('waitPickup').textContent = ride.pickup || '—';
+      document.getElementById('waitDropoff').textContent = ride.dropoff || '—';
+      showScreen('screen-waiting');
+    } else if(ride.status === 'Matched'){
+      document.getElementById('matchedDriverName').textContent = ride.driver_name || 'Your driver';
+      document.getElementById('matchedDriverCar').textContent =
+        [ride.driver_car, ride.driver_build].filter(Boolean).join(' · ') || 'STANCE crew';
+      document.getElementById('matchedPickup').textContent = ride.pickup || '—';
+      document.getElementById('matchedDropoff').textContent = ride.dropoff || '—';
+
+      if(ride.fare_zar != null){
+        document.getElementById('matchedFareRow').style.display = 'flex';
+        document.getElementById('matchedFare').textContent = 'R' + ride.fare_zar;
+      }
+
+      if(ride.driver_whatsapp){
+        const digits = ride.driver_whatsapp.replace(/\D/g, '');
+        document.getElementById('matchedWhatsappBtn').href = `https://wa.me/${digits}`;
+      }
+      showScreen('screen-matched');
+      stopPolling();
+    } else if(ride.status === 'Completed'){
+      showScreen('screen-completed');
+      stopPolling();
+    } else if(ride.status === 'Cancelled'){
+      showScreen('screen-cancelled');
+      stopPolling();
+    }
+  }
+
+  function startPolling(bookingId){
+    stopPolling();
+    checkStatus(bookingId);
+    pollTimer = setInterval(() => checkStatus(bookingId), 6000);
+  }
+
+  function stopPolling(){
+    if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  function startOver(){
+    stopPolling();
+    localStorage.removeItem('stance_last_ride');
+    const url = new URL(window.location);
+    url.searchParams.delete('ride');
+    window.history.replaceState({}, '', url);
+    document.getElementById('reqName').value = '';
+    document.getElementById('reqWhatsapp').value = '';
+    document.getElementById('reqPickup').value = '';
+    document.getElementById('reqDropoff').value = '';
+    showScreen('screen-request');
+  }
+
+  // On load: resume an existing ride if we have one
+  window.addEventListener('DOMContentLoaded', () => {
+    const existingRide = getRideIdFromUrl() || localStorage.getItem('stance_last_ride');
+    if(existingRide){
+      setRideId(existingRide);
+      showScreen('screen-waiting');
+      startPolling(existingRide);
+    }
+  });
+</script>
+
+</body>
+</html>
