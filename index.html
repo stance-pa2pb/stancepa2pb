@@ -219,6 +219,44 @@
     border-top:1px solid rgba(255,255,255,0.07);
   }
   footer .logo{margin-bottom:8px; justify-content:center; display:inline-flex;}
+
+  /* ---------- UNLOCK OVERLAY ---------- */
+  .unlock-overlay{
+    position:fixed; inset:0; background:rgba(5,5,10,0.94); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; z-index:300; padding:20px;
+    opacity:0; pointer-events:none; transition:opacity 0.3s ease;
+  }
+  .unlock-overlay.show{opacity:1; pointer-events:auto;}
+  .unlock-card{
+    max-width:420px; width:100%; background:var(--panel); border-radius:20px; padding:40px 30px;
+    text-align:center; border:1px solid rgba(200,255,77,0.25); position:relative; overflow:hidden;
+    transform:scale(0.92); transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .unlock-overlay.show .unlock-card{transform:scale(1);}
+  .unlock-card::before{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 50% -10%, rgba(200,255,77,0.15), transparent 60%);
+  }
+  .unlock-lock{
+    font-size:2.6rem; margin-bottom:14px; position:relative;
+    animation:unlockPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+  }
+  @keyframes unlockPop{0%{transform:scale(0) rotate(-15deg);} 60%{transform:scale(1.2) rotate(5deg);} 100%{transform:scale(1) rotate(0);}}
+  .unlock-step{
+    font-family:'Rajdhani'; font-weight:700; color:var(--lime); font-size:0.8rem;
+    letter-spacing:0.12em; margin-bottom:10px; position:relative;
+  }
+  .unlock-card h2{font-size:1.4rem; margin-bottom:8px; position:relative;}
+  .unlock-card h2 span{color:var(--lime);}
+  .unlock-sub{color:var(--steel); font-size:0.9rem; margin-bottom:24px; position:relative;}
+  .unlock-progress{display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:22px; position:relative;}
+  .unlock-dot{width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,0.15);}
+  .unlock-dot.done{background:var(--lime); box-shadow:0 0 12px rgba(200,255,77,0.5);}
+  .unlock-line{width:30px; height:2px; background:rgba(255,255,255,0.12);}
+  .unlock-tease{
+    color:var(--steel); font-size:0.8rem; margin-bottom:24px; position:relative; line-height:1.5;
+    background:var(--concrete); border-radius:8px; padding:14px 16px;
+  }
 </style>
 </head>
 <body>
@@ -374,6 +412,24 @@
   <p style="margin-top:14px; font-size:0.8rem;"><a href="privacy.html" style="color:var(--steel);">Privacy Policy &amp; Terms</a></p>
 </footer>
 
+<div class="unlock-overlay" id="unlockOverlay">
+  <div class="unlock-card">
+    <div class="unlock-lock" id="unlockIcon">🔒</div>
+    <div class="unlock-step">STAGE 01 UNLOCKED</div>
+    <h2>Welcome to the movement, <span id="unlockName">—</span></h2>
+    <p id="unlockRoleText" class="unlock-sub">—</p>
+    <div class="unlock-progress">
+      <div class="unlock-dot done"></div>
+      <div class="unlock-line"></div>
+      <div class="unlock-dot"></div>
+      <div class="unlock-line"></div>
+      <div class="unlock-dot"></div>
+    </div>
+    <p class="unlock-tease">🔻 Stage 02 unlocks when we go live. Keep an eye on your inbox and WhatsApp — you won't want to miss it.</p>
+    <button class="btn btn-lime" onclick="closeUnlockOverlay()" style="width:100%;">Continue</button>
+  </div>
+</div>
+
 <script>
   // ====== SUPABASE CONFIG — paste your own values here ======
   const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
@@ -469,9 +525,10 @@
       });
 
       if(res.ok){
-        successMsg.style.display = 'block';
         document.getElementById('signupForm').reset();
         sendWelcomeEmail(payload.email, payload.full_name, currentRole);
+        notifyFounderOnWhatsapp(payload, currentRole);
+        showUnlockOverlay(payload.full_name, currentRole);
       } else {
         errorMsg.style.display = 'block';
       }
@@ -496,6 +553,27 @@
     } catch(err){
       console.log('Welcome email failed silently — signup itself still succeeded:', err);
     }
+  }
+
+  // Instantly notifies the founder on WhatsApp the moment someone signs up —
+  // opens in a new tab, pre-filled and ready to send with one tap.
+  function notifyFounderOnWhatsapp(payload, role){
+    const roleLabel = role === 'driver' ? 'Driver / Crew' : 'Rider';
+    const msg = `🔻 New ${roleLabel} signup on STANCE PA2PB!%0AName: ${payload.full_name}%0ACity: ${payload.city}%0AWhatsApp: ${payload.whatsapp_number}${role === 'driver' ? `%0ACar: ${payload.car_make_model || '—'} (${payload.build_style || '—'})` : ''}`;
+    window.open(`https://wa.me/27679503097?text=${msg}`, '_blank');
+  }
+
+  function showUnlockOverlay(name, role){
+    const overlay = document.getElementById('unlockOverlay');
+    document.getElementById('unlockName').textContent = name.split(' ')[0];
+    document.getElementById('unlockRoleText').textContent = role === 'driver'
+      ? "You're queued for crew verification."
+      : "You're on the launch list.";
+    overlay.classList.add('show');
+  }
+
+  function closeUnlockOverlay(){
+    document.getElementById('unlockOverlay').classList.remove('show');
   }
 </script>
 
