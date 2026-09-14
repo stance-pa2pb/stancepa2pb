@@ -381,6 +381,9 @@
         <input type="text" id="fCity" placeholder="e.g. Johannesburg" required>
 
         <div class="driver-only" id="driverFields">
+          <label>Area / Suburb <span style="opacity:0.6;">(so we can match you to nearby rides)</span></label>
+          <input type="text" id="fArea" placeholder="e.g. Sandton, Soweto, Vosloorus">
+
           <label>Car make & model</label>
           <input type="text" id="fCar" placeholder="e.g. VW Golf Mk5">
 
@@ -508,6 +511,7 @@
 
     const table = currentRole === 'rider' ? 'riders' : 'drivers';
     if(currentRole === 'driver'){
+      payload.area = document.getElementById('fArea').value.trim();
       payload.car_make_model = document.getElementById('fCar').value.trim();
       payload.build_style = document.getElementById('fBuild').value;
     }
