@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>StancePA2PB Office</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -265,7 +266,7 @@
       <input type="text" id="driverSearchInput" class="search-input" placeholder="Search drivers...">
     </div>
     <table>
-      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Car</th><th>Build</th><th>Status</th><th>Signed up</th><th>Actions</th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>City</th><th>Area</th><th>Car</th><th>Build</th><th>Status</th><th>Signed up</th><th>Actions</th></tr></thead>
       <tbody id="driversBody"><tr class="empty-row"><td colspan="9">Loading…</td></tr></tbody>
     </table>
   </main>
@@ -373,6 +374,19 @@
     return new Date(d).toLocaleDateString('en-ZA', { day:'2-digit', month:'short', year:'numeric' });
   }
 
+  // Escapes user-submitted text (names, cities, etc.) before it goes into
+  // innerHTML. Without this, a malicious signup could break out of the
+  // markup and run script inside this admin session.
+  function escapeHtml(str){
+    if(str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   let ridersData = [];
   let driversData = [];
   let bookingsData = [];
@@ -382,7 +396,7 @@
   function matchesSearch(person, query){
     if(!query) return true;
     const q = query.toLowerCase();
-    return [person.full_name, person.email, person.whatsapp_number, person.city, person.car_make_model, person.build_style]
+    return [person.full_name, person.email, person.whatsapp_number, person.city, person.area, person.car_make_model, person.build_style]
       .filter(Boolean)
       .some(field => field.toLowerCase().includes(q));
   }
@@ -405,14 +419,14 @@
     const ridersBody = document.getElementById('ridersBody');
     ridersBody.innerHTML = filteredRiders.length ? filteredRiders.map(r => `
       <tr>
-        <td>${r.full_name || ''}</td>
-        <td>${r.email || ''}</td>
-        <td>${r.whatsapp_number || ''}</td>
-        <td>${r.city || ''}</td>
+        <td>${escapeHtml(r.full_name)}</td>
+        <td>${escapeHtml(r.email)}</td>
+        <td>${escapeHtml(r.whatsapp_number)}</td>
+        <td>${escapeHtml(r.city)}</td>
         <td>${fmtDate(r.created_at)}</td>
         <td>
           <button class="action-btn edit-btn" onclick="openEditModal('rider', '${r.id}')">Edit</button>
-          <button class="action-btn decline-btn" onclick="deleteRecord('rider', '${r.id}', '${(r.full_name||'this rider').replace(/'/g, "\\'")}')">Delete</button>
+          <button class="action-btn decline-btn" onclick="deleteRecord('rider', '${r.id}')">Delete</button>
         </td>
       </tr>`).join('') : `<tr class="empty-row"><td colspan="6">${riderSearch ? 'No matching riders.' : 'No riders yet.'}</td></tr>`;
 
@@ -424,22 +438,23 @@
       const isPending = status === 'Pending';
       return `
       <tr>
-        <td>${d.full_name || ''}</td>
-        <td>${d.email || ''}</td>
-        <td>${d.whatsapp_number || ''}</td>
-        <td>${d.city || ''}</td>
-        <td>${d.car_make_model || ''}</td>
-        <td>${d.build_style || ''}</td>
+        <td>${escapeHtml(d.full_name)}</td>
+        <td>${escapeHtml(d.email)}</td>
+        <td>${escapeHtml(d.whatsapp_number)}</td>
+        <td>${escapeHtml(d.city)}</td>
+        <td>${escapeHtml(d.area)}</td>
+        <td>${escapeHtml(d.car_make_model)}</td>
+        <td>${escapeHtml(d.build_style)}</td>
         <td><span class="badge ${badgeClass}">${status}</span></td>
         <td>${fmtDate(d.created_at)}</td>
         <td>
           <button class="action-btn approve-btn" ${isPending ? '' : 'disabled'} onclick="approveDriver('${d.id}')">Approve</button>
           <button class="action-btn decline-btn" ${isPending ? '' : 'disabled'} onclick="declineDriver('${d.id}')">Decline</button><br>
           <button class="action-btn edit-btn" onclick="openEditModal('driver', '${d.id}')">Edit</button>
-          <button class="action-btn decline-btn" onclick="deleteRecord('driver', '${d.id}', '${(d.full_name||'this driver').replace(/'/g, "\\'")}')">Delete</button>
+          <button class="action-btn decline-btn" onclick="deleteRecord('driver', '${d.id}')">Delete</button>
         </td>
       </tr>`;
-    }).join('') : `<tr class="empty-row"><td colspan="9">${driverSearch ? 'No matching drivers.' : 'No drivers yet.'}</td></tr>`;
+    }).join('') : `<tr class="empty-row"><td colspan="10">${driverSearch ? 'No matching drivers.' : 'No drivers yet.'}</td></tr>`;
   }
 
   function renderRideDropdowns(){
@@ -449,9 +464,9 @@
     const prevDriver = driverSelect.value;
 
     riderSelect.innerHTML = '<option value="">Select a rider...</option>' +
-      ridersData.map(r => `<option value="${r.id}">${r.full_name}</option>`).join('');
+      ridersData.map(r => `<option value="${r.id}">${escapeHtml(r.full_name)}</option>`).join('');
     driverSelect.innerHTML = '<option value="">Select a driver...</option>' +
-      driversData.map(d => `<option value="${d.id}">${d.full_name}${d.vetting_status === 'Verified' ? ' ✓' : ''}</option>`).join('');
+      driversData.map(d => `<option value="${d.id}">${escapeHtml(d.full_name)}${d.vetting_status === 'Verified' ? ' ✓' : ''}</option>`).join('');
 
     riderSelect.value = prevRider;
     driverSelect.value = prevDriver;
@@ -463,14 +478,14 @@
     ridesBody.innerHTML = sorted.length ? sorted.map(b => {
       const rider = ridersData.find(r => r.id === b.rider_id);
       const driverOptions = ['<option value="">Not matched yet</option>']
-        .concat(driversData.map(d => `<option value="${d.id}" ${b.driver_id === d.id ? 'selected' : ''}>${d.full_name}</option>`))
+        .concat(driversData.map(d => `<option value="${d.id}" ${b.driver_id === d.id ? 'selected' : ''}>${escapeHtml(d.full_name)}</option>`))
         .join('');
       const statusOptions = ['Requested','Matched','Completed','Cancelled']
         .map(s => `<option value="${s}" ${b.status === s ? 'selected' : ''}>${s}</option>`)
         .join('');
       return `
       <tr>
-        <td>${rider ? rider.full_name : '—'}</td>
+        <td>${rider ? escapeHtml(rider.full_name) : (b.rider_name ? `${escapeHtml(b.rider_name)}${b.rider_whatsapp ? ' · ' + escapeHtml(b.rider_whatsapp) : ''}` : '—')}</td>
         <td>
           <select class="inline-select" onchange="updateBookingField('${b.id}', 'driver_id', this.value || null)">
             ${driverOptions}
@@ -678,6 +693,7 @@
     const driverFields = document.getElementById('editDriverFields');
     if(type === 'driver'){
       driverFields.style.display = 'block';
+      document.getElementById('editArea').value = record.area || '';
       document.getElementById('editCar').value = record.car_make_model || '';
       document.getElementById('editBuild').value = record.build_style || 'Bagged';
     } else {
@@ -703,6 +719,7 @@
       city: document.getElementById('editCity').value.trim()
     };
     if(editingType === 'driver'){
+      payload.area = document.getElementById('editArea').value.trim();
       payload.car_make_model = document.getElementById('editCar').value.trim();
       payload.build_style = document.getElementById('editBuild').value;
     }
@@ -729,9 +746,11 @@
     refreshKeepingScroll();
   }
 
-  async function deleteRecord(type, id, name){
-    if(!confirm(`Delete ${name}? This can't be undone.`)) return;
+  async function deleteRecord(type, id){
     const table = type === 'rider' ? 'riders' : 'drivers';
+    const record = (type === 'rider' ? ridersData : driversData).find(x => x.id === id);
+    const name = (record && record.full_name) || `this ${type}`;
+    if(!confirm(`Delete ${name}? This can't be undone.`)) return;
     const token = sessionStorage.getItem('stance_office_token');
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
       method: 'DELETE',
@@ -799,6 +818,8 @@
     <label>City</label>
     <input type="text" id="editCity">
     <div id="editDriverFields">
+      <label>Area / Suburb</label>
+      <input type="text" id="editArea">
       <label>Car make & model</label>
       <input type="text" id="editCar">
       <label>Build style</label>
@@ -815,6 +836,10 @@
     </div>
   </div>
 </div>
+
+<p style="text-align:center; font-size:0.75rem; color:var(--steel); padding:20px 6% 30px;">
+  <a href="privacy.html" style="color:inherit; text-decoration:underline;">Privacy Policy & Terms</a>
+</p>
 
 </body>
 </html>
