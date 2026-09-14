@@ -72,6 +72,7 @@
     transition:transform .15s ease;
   }
   .btn:active{transform:scale(0.98);}
+  .btn:disabled{opacity:0.6; cursor:default; transform:none;}
   .btn-outline{background:transparent; border:1px solid rgba(255,255,255,0.2); color:var(--white); margin-top:10px;}
 
   .crew-list{display:flex; flex-direction:column; gap:12px; margin-bottom:20px;}
@@ -187,7 +188,7 @@
     <div class="crew-any" id="crewAnyOption" onclick="selectCrew(null)">
       No preference — match me with any available crew
     </div>
-    <button class="btn" onclick="submitRequest()">Confirm Request</button>
+    <button class="btn" id="confirmRequestBtn" onclick="submitRequest()">Confirm Request</button>
     <button class="btn btn-outline" onclick="showScreen('screen-request')">Back</button>
   </div>
 
@@ -247,6 +248,10 @@
 
 </main>
 
+<p style="text-align:center; font-size:0.75rem; color:var(--steel); padding:0 6% 30px;">
+  <a href="privacy.html" style="color:inherit; text-decoration:underline;">Privacy Policy & Terms</a>
+</p>
+
 <script>
   const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_PkcCpgYgR_AaBQEZP-ZxBg_nrGl6115";
@@ -293,6 +298,18 @@
     await loadCrews();
   }
 
+  // Escapes user-submitted text before it goes into innerHTML, so a crew's
+  // name/car/build can't break out of the markup and run script.
+  function escapeHtml(str){
+    if(str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   async function loadCrews(){
     const crewList = document.getElementById('crewList');
     try {
@@ -315,11 +332,11 @@
 
       document.getElementById('crewSub').textContent = `${availableCrews.length} verified crew${availableCrews.length > 1 ? 's' : ''} nearby`;
       crewList.innerHTML = availableCrews.map((c, i) => `
-        <div class="crew-card" id="crew-${c.id}" onclick="selectCrew('${c.id}')">
+        <div class="crew-card" id="crew-${escapeHtml(c.id)}" onclick="selectCrew('${escapeHtml(c.id)}')">
           <div class="crew-emoji">${crewEmojis[i % crewEmojis.length]}</div>
           <div class="crew-info">
-            <h3>${c.full_name}</h3>
-            <p>${[c.car_make_model, c.build_style].filter(Boolean).join(' · ') || 'STANCE crew'}</p>
+            <h3>${escapeHtml(c.full_name)}</h3>
+            <p>${escapeHtml([c.car_make_model, c.build_style].filter(Boolean).join(' · ') || 'STANCE crew')}</p>
           </div>
           <div class="crew-check">✓</div>
         </div>`).join('');
@@ -351,7 +368,7 @@
     const pickup = document.getElementById('reqPickup').value.trim();
     const dropoff = document.getElementById('reqDropoff').value.trim();
 
-    const confirmBtn = document.querySelector('#screen-crew .btn');
+    const confirmBtn = document.getElementById('confirmRequestBtn');
     if(confirmBtn){ confirmBtn.disabled = true; confirmBtn.textContent = 'Calculating your fare...'; }
 
     try {
