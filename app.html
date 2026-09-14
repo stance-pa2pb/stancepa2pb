@@ -200,6 +200,7 @@
       <div class="trip-detail">
         <div class="trip-row"><span>Pickup</span><span id="waitPickup">—</span></div>
         <div class="trip-row"><span>Drop-off</span><span id="waitDropoff">—</span></div>
+        <div class="trip-row" id="waitFareRow" style="display:none;"><span>Fare</span><span id="waitFare">—</span></div>
         <div class="trip-row" id="waitPreferredRow" style="display:none;"><span>Requested crew</span><span id="waitPreferred">—</span></div>
       </div>
     </div>
@@ -350,45 +351,52 @@
     const pickup = document.getElementById('reqPickup').value.trim();
     const dropoff = document.getElementById('reqDropoff').value.trim();
 
-    const bookingId = crypto.randomUUID();
+    const confirmBtn = document.querySelector('#screen-crew .btn');
+    if(confirmBtn){ confirmBtn.disabled = true; confirmBtn.textContent = 'Calculating your fare...'; }
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/request-ride`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: bookingId,
           rider_name: name,
           rider_whatsapp: whatsapp,
           pickup: pickup,
           dropoff: dropoff,
-          preferred_driver_id: selectedCrewId,
-          status: 'Requested'
+          preferred_driver_id: selectedCrewId
         })
       });
 
-      if(!res.ok){
+      const data = await res.json();
+
+      if(!res.ok || !data.success){
         alert("Something went wrong sending that — check your connection and try again.");
+        if(confirmBtn){ confirmBtn.disabled = false; confirmBtn.textContent = 'Confirm Request'; }
         return;
       }
 
-      setRideId(bookingId);
+      setRideId(data.booking_id);
       document.getElementById('waitPickup').textContent = pickup;
       document.getElementById('waitDropoff').textContent = dropoff;
+      if(data.fare_zar != null){
+        document.getElementById('waitFareRow').style.display = 'flex';
+        document.getElementById('waitFare').textContent = 'R' + data.fare_zar +
+          (data.distance_km != null ? ` (${data.distance_km}km)` : '');
+      }
       if(selectedCrewName){
         document.getElementById('waitPreferredRow').style.display = 'flex';
         document.getElementById('waitPreferred').textContent = selectedCrewName;
       }
       showScreen('screen-waiting');
-      startPolling(bookingId);
+      startPolling(data.booking_id);
 
     } catch(err){
       alert("Something went wrong sending that — check your connection and try again.");
+      if(confirmBtn){ confirmBtn.disabled = false; confirmBtn.textContent = 'Confirm Request'; }
     }
   }
 
