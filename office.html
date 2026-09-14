@@ -150,45 +150,6 @@
   .edit-btn{background:transparent; border:1px solid var(--steel); color:var(--white); margin-top:4px;}
   .action-btn:disabled{opacity:0.5; cursor:default;}
 
-  .control-strip{
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
-    margin-bottom:20px; padding:14px 18px; background:var(--panel); border-radius:8px;
-    border:1px solid rgba(255,255,255,0.06);
-  }
-  .control-item{display:flex; align-items:center; gap:8px; font-family:'Rajdhani'; font-weight:600; font-size:0.9rem;}
-  .live-dot{
-    width:9px; height:9px; border-radius:50%; background:var(--lime); flex-shrink:0;
-    box-shadow:0 0 0 4px rgba(200,255,77,0.2); animation:liveBlink 2s ease-in-out infinite;
-  }
-  @keyframes liveBlink{0%,100%{opacity:1;} 50%{opacity:0.4;}}
-  .control-chips{display:flex; gap:8px; flex-wrap:wrap;}
-  .chip{font-size:0.7rem; padding:5px 10px; border-radius:20px; background:var(--concrete); color:var(--steel);}
-  .chip-on{color:var(--lime);}
-
-  .momentum-box{
-    background:var(--panel); border-radius:8px; padding:20px 22px; margin-bottom:20px;
-    border:1px solid rgba(255,255,255,0.06);
-  }
-  .momentum-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
-  .momentum-head h3{font-size:1rem;}
-  .momentum-head span{font-family:'Rajdhani'; font-weight:700; color:var(--lime); font-size:0.95rem;}
-  .momentum-track{height:8px; background:var(--concrete); border-radius:6px; overflow:hidden; margin-bottom:10px;}
-  .momentum-fill{height:100%; background:linear-gradient(90deg, var(--lime), var(--rust)); border-radius:6px; transition:width 0.6s ease;}
-  .momentum-note{color:var(--steel); font-size:0.78rem;}
-
-  .activity-feed{
-    background:var(--panel); border-radius:8px; margin-bottom:36px; overflow:hidden;
-    border:1px solid rgba(255,255,255,0.06);
-  }
-  .activity-item{
-    display:flex; align-items:center; gap:12px; padding:13px 18px; font-size:0.85rem;
-    border-bottom:1px solid rgba(255,255,255,0.05);
-  }
-  .activity-item:last-child{border-bottom:none;}
-  .activity-icon{font-size:1rem; flex-shrink:0;}
-  .activity-text{flex:1;}
-  .activity-time{color:var(--steel); font-size:0.75rem; flex-shrink:0;}
-
   .launch-box{
     background:var(--concrete); border-radius:8px; padding:24px; margin-bottom:36px;
     display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
@@ -232,26 +193,6 @@
   </header>
 
   <main>
-    <div class="control-strip">
-      <div class="control-item">
-        <span class="live-dot"></span> <span id="greetingText">Loading...</span>
-      </div>
-      <div class="control-chips">
-        <span class="chip chip-on">● Site live</span>
-        <span class="chip chip-on">● Database connected</span>
-        <span class="chip chip-on">● Welcome emails active</span>
-      </div>
-    </div>
-
-    <div class="momentum-box">
-      <div class="momentum-head">
-        <h3 id="momentumLabel">Building momentum</h3>
-        <span id="momentumCount">0 / 50</span>
-      </div>
-      <div class="momentum-track"><div class="momentum-fill" id="momentumFill" style="width:0%;"></div></div>
-      <p class="momentum-note">Total riders + crews signed up so far. Every one gets you closer to launch-ready.</p>
-    </div>
-
     <div class="launch-box">
       <div>
         <h3>Ready to launch?</h3>
@@ -262,13 +203,6 @@
         <button id="copyWhatsappBtn" onclick="copyAllWhatsapp()">Copy WhatsApp numbers</button>
         <button id="launchBtn" onclick="sendLaunchEmails()">Email everyone: we're live</button>
       </div>
-    </div>
-
-    <div class="panel-head">
-      <h2 style="color:var(--white);">Recent activity</h2>
-    </div>
-    <div class="activity-feed" id="activityFeed">
-      <p class="empty-row" style="padding:20px; text-align:center;">Loading...</p>
     </div>
 
     <div class="stats-row">
@@ -288,14 +222,6 @@
         <div>
           <label>Rider</label>
           <select id="rideRiderSelect"><option value="">Select a rider...</option></select>
-        </div>
-        <div>
-          <label>Pickup</label>
-          <input type="text" id="ridePickup" placeholder="e.g. Sandton Gautrain">
-        </div>
-        <div>
-          <label>Drop-off</label>
-          <input type="text" id="rideDropoff" placeholder="e.g. Melrose Arch">
         </div>
         <div>
           <label>Driver (leave blank until matched)</label>
@@ -318,8 +244,8 @@
       </div>
     </div>
     <table>
-      <thead><tr><th>Rider</th><th>Pickup</th><th>Drop-off</th><th>Driver</th><th>Fare (ZAR)</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-      <tbody id="ridesBody"><tr class="empty-row"><td colspan="8">Loading…</td></tr></tbody>
+      <thead><tr><th>Rider</th><th>Driver</th><th>Fare (ZAR)</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody id="ridesBody"><tr class="empty-row"><td colspan="6">Loading…</td></tr></tbody>
     </table>
 
     <div class="panel-head">
@@ -469,63 +395,6 @@
     renderRideDropdowns();
     renderRidesTable();
     renderRideStats();
-    renderControlStrip();
-    renderMomentum();
-    renderActivityFeed();
-  }
-
-  function renderControlStrip(){
-    const hour = new Date().getHours();
-    const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-    document.getElementById('greetingText').textContent = `${greeting}, Kabelo — here's where things stand.`;
-  }
-
-  function renderMomentum(){
-    const goal = 50;
-    const total = ridersData.length + driversData.length;
-    const pct = Math.min(100, Math.round((total / goal) * 100));
-    document.getElementById('momentumCount').textContent = `${total} / ${goal}`;
-    document.getElementById('momentumFill').style.width = pct + '%';
-
-    const label = document.getElementById('momentumLabel');
-    if(total === 0) label.textContent = 'Just getting started';
-    else if(total < 15) label.textContent = 'Building momentum';
-    else if(total < 35) label.textContent = 'Real traction building';
-    else if(total < 50) label.textContent = 'Almost launch-ready';
-    else label.textContent = 'Launch-ready — go get them 🔻';
-  }
-
-  function timeAgo(dateStr){
-    const diffMs = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diffMs / 60000);
-    if(mins < 1) return 'just now';
-    if(mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if(hrs < 24) return `${hrs}h ago`;
-    const days = Math.floor(hrs / 24);
-    return `${days}d ago`;
-  }
-
-  function renderActivityFeed(){
-    const events = [];
-    ridersData.forEach(r => events.push({ type: 'rider', icon: '🔻', text: `${r.full_name} joined as a rider`, time: r.created_at }));
-    driversData.forEach(d => events.push({ type: 'driver', icon: '🚗', text: `${d.full_name} signed up as a crew`, time: d.created_at }));
-    bookingsData.forEach(b => {
-      const riderLabel = (ridersData.find(r => r.id === b.rider_id) || {}).full_name || b.rider_name || 'A rider';
-      if(b.status === 'Completed') events.push({ type: 'ride', icon: '✅', text: `Ride completed for ${riderLabel}`, time: b.created_at });
-      else if(b.status === 'Requested') events.push({ type: 'ride', icon: '📍', text: `${riderLabel} requested a ride`, time: b.created_at });
-    });
-
-    events.sort((a, b) => new Date(b.time) - new Date(a.time));
-    const feed = document.getElementById('activityFeed');
-    const recent = events.slice(0, 8);
-
-    feed.innerHTML = recent.length ? recent.map(e => `
-      <div class="activity-item">
-        <span class="activity-icon">${e.icon}</span>
-        <span class="activity-text">${e.text}</span>
-        <span class="activity-time">${timeAgo(e.time)}</span>
-      </div>`).join('') : '<p class="empty-row" style="padding:20px; text-align:center;">Nothing yet — once people start signing up, it shows here.</p>';
   }
 
   function renderTables(){
@@ -601,9 +470,7 @@
         .join('');
       return `
       <tr>
-        <td>${rider ? rider.full_name : (b.rider_name ? `${b.rider_name}${b.rider_whatsapp ? ' · ' + b.rider_whatsapp : ''}` : '—')}</td>
-        <td>${b.pickup || '—'}</td>
-        <td>${b.dropoff || '—'}</td>
+        <td>${rider ? rider.full_name : '—'}</td>
         <td>
           <select class="inline-select" onchange="updateBookingField('${b.id}', 'driver_id', this.value || null)">
             ${driverOptions}
@@ -621,7 +488,7 @@
         <td>${fmtDate(b.created_at)}</td>
         <td><button class="action-btn decline-btn" onclick="deleteBooking('${b.id}')">Delete</button></td>
       </tr>`;
-    }).join('') : '<tr class="empty-row"><td colspan="8">No rides logged yet.</td></tr>';
+    }).join('') : '<tr class="empty-row"><td colspan="6">No rides logged yet.</td></tr>';
   }
 
   function renderRideStats(){
@@ -669,8 +536,6 @@
   async function logRide(){
     const riderId = document.getElementById('rideRiderSelect').value;
     const driverId = document.getElementById('rideDriverSelect').value;
-    const pickup = document.getElementById('ridePickup').value.trim();
-    const dropoff = document.getElementById('rideDropoff').value.trim();
     const fare = document.getElementById('rideFare').value;
     const status = document.getElementById('rideStatus').value;
 
@@ -691,8 +556,6 @@
       body: JSON.stringify({
         rider_id: riderId,
         driver_id: driverId || null,
-        pickup: pickup || null,
-        dropoff: dropoff || null,
         fare_zar: fare ? Number(fare) : null,
         status: status
       })
@@ -704,8 +567,6 @@
     }
 
     showToast('Request logged.', 'success');
-    document.getElementById('ridePickup').value = '';
-    document.getElementById('rideDropoff').value = '';
     document.getElementById('rideFare').value = '';
     document.getElementById('rideRiderSelect').value = '';
     document.getElementById('rideDriverSelect').value = '';
