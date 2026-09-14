@@ -72,6 +72,7 @@
     transition:transform .15s ease, box-shadow .15s ease; font-family:'Inter';
   }
   .btn:hover{transform:translateY(-2px);}
+  .btn:disabled{opacity:0.6; cursor:default; transform:none;}
   .btn-lime{background:var(--lime); color:#0A0A0D;}
   .hero-actions .btn-lime{animation:ctaPulse 2.4s ease-in-out infinite;}
   @keyframes ctaPulse{
@@ -399,7 +400,6 @@
         <button type="submit" id="signupBtn" class="rider-btn">Join the waitlist</button>
       </form>
 
-      <div class="success-msg" id="successMsg">You're on the list! We'll email and WhatsApp you the moment STANCE PA2PB launches.</div>
       <div class="error-msg" id="errorMsg">Something went wrong sending that — check your connection and try again, or message us directly on WhatsApp.</div>
 
       <p class="form-note">Your details go straight into our launch list — no spam, just the one message when we're live.</p>
@@ -429,7 +429,7 @@
       <div class="unlock-dot"></div>
     </div>
     <p class="unlock-tease">🔻 Stage 02 unlocks when we go live. Keep an eye on your inbox and WhatsApp — you won't want to miss it.</p>
-    <button class="btn btn-lime" onclick="closeUnlockOverlay()" style="width:100%; position:relative; z-index:1;">Continue</button>
+    <button class="btn btn-lime" onclick="closeUnlockOverlay()" style="width:100%;">Continue</button>
   </div>
 </div>
 
@@ -497,10 +497,20 @@
 
   document.getElementById('signupForm').addEventListener('submit', async function(e){
     e.preventDefault();
-    const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
-    successMsg.style.display = 'none';
+    const submitBtn = document.getElementById('signupBtn');
     errorMsg.style.display = 'none';
+
+    // Guard against double-submits (e.g. an impatient double-tap)
+    if(submitBtn.disabled) return;
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Joining...';
+
+    // Open the WhatsApp notification tab synchronously, still inside this click
+    // gesture, so Safari/Firefox don't block it later once we're past an await.
+    // We only navigate it if the signup actually succeeds (see below).
+    const waWindow = window.open('', '_blank');
 
     const payload = {
       full_name: document.getElementById('fName').value.trim(),
@@ -531,13 +541,18 @@
       if(res.ok){
         document.getElementById('signupForm').reset();
         sendWelcomeEmail(payload.email, payload.full_name, currentRole);
-        notifyFounderOnWhatsapp(payload, currentRole);
+        notifyFounderOnWhatsapp(waWindow, payload, currentRole);
         showUnlockOverlay(payload.full_name, currentRole);
       } else {
+        if(waWindow) waWindow.close();
         errorMsg.style.display = 'block';
       }
     } catch(err){
+      if(waWindow) waWindow.close();
       errorMsg.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
     }
   });
 
@@ -559,12 +574,16 @@
     }
   }
 
-  // Instantly notifies the founder on WhatsApp the moment someone signs up —
-  // opens in a new tab, pre-filled and ready to send with one tap.
-  function notifyFounderOnWhatsapp(payload, role){
+  // Notifies the founder on WhatsApp the moment someone signs up — navigates
+  // the tab we already opened synchronously in the submit handler, pre-filled
+  // and ready to send with one tap. (We navigate an existing window rather
+  // than calling window.open() again here, since opening one after an
+  // `await` gets blocked as a popup by Safari and Firefox.)
+  function notifyFounderOnWhatsapp(waWindow, payload, role){
+    if(!waWindow) return; // was blocked or failed to open — signup itself still succeeded
     const roleLabel = role === 'driver' ? 'Driver / Crew' : 'Rider';
-    const msg = `🔻 New ${roleLabel} signup on STANCE PA2PB!%0AName: ${payload.full_name}%0ACity: ${payload.city}%0AWhatsApp: ${payload.whatsapp_number}${role === 'driver' ? `%0ACar: ${payload.car_make_model || '—'} (${payload.build_style || '—'})` : ''}`;
-    window.open(`https://wa.me/27679503097?text=${msg}`, '_blank');
+    const msg = `🔻 New ${roleLabel} signup on STANCE PA2PB!%0AName: ${payload.full_name}%0ACity: ${payload.city}%0AWhatsApp: ${payload.whatsapp_number}${role === 'driver' ? `%0AArea: ${payload.area || '—'}%0ACar: ${payload.car_make_model || '—'} (${payload.build_style || '—'})` : ''}`;
+    waWindow.location.href = `https://wa.me/27679503097?text=${msg}`;
   }
 
   function showUnlockOverlay(name, role){
