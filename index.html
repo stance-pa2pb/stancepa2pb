@@ -433,12 +433,9 @@
   </div>
 </div>
 
+<script src="shared/config.js"></script>
+<script src="shared/utils.js"></script>
 <script>
-  // ====== SUPABASE CONFIG — paste your own values here ======
-  const SUPABASE_URL = "https://wtyoamcnywgltftfewxd.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_PkcCpgYgR_AaBQEZP-ZxBg_nrGl6115";
-  // ============================================================
-
   function scrollToSection(id){
     const el = document.getElementById(id);
     if(el) el.scrollIntoView({behavior:'smooth'});
@@ -495,13 +492,6 @@
     }
   }
 
-  // Accepts SA numbers like 0679503097 or +27679503097, with optional
-  // spaces/dashes between groups.
-  function isValidWhatsapp(number){
-    const digitsOnly = number.replace(/[\s-]/g, '');
-    return /^(0|\+27)[0-9]{9}$/.test(digitsOnly);
-  }
-
   document.getElementById('signupForm').addEventListener('submit', async function(e){
     e.preventDefault();
     const errorMsg = document.getElementById('errorMsg');
@@ -548,12 +538,44 @@
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Prefer': currentRole === 'driver' ? 'return=representation' : 'return=minimal'
         },
         body: JSON.stringify(payload)
       });
 
       if(res.ok){
+        // Drivers get a matching row in `vehicles` (separate from the driver
+        // record itself, per the vehicle-categories architecture) so future
+        // features — multiple vehicles, per-category verification, etc. —
+        // have real data to work with from day one.
+        if(currentRole === 'driver'){
+          try {
+            const [newDriver] = await res.json();
+            const categories = await fetchEnabledVehicleCategories();
+            const category = categories.find(c => c.key === 'stance_custom') || categories[0];
+            if(newDriver && category){
+              await fetch(`${SUPABASE_URL}/rest/v1/vehicles`, {
+                method: 'POST',
+                headers: {
+                  'apikey': SUPABASE_ANON_KEY,
+                  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                  driver_id: newDriver.id,
+                  vehicle_category_id: category.id,
+                  model: payload.car_make_model,
+                  build_style: payload.build_style
+                })
+              });
+            }
+          } catch(vehicleErr){
+            // Non-fatal — the driver signup itself already succeeded.
+            console.warn('Vehicle record could not be created:', vehicleErr);
+          }
+        }
+
         document.getElementById('signupForm').reset();
         sendWelcomeEmail(payload.email, payload.full_name, currentRole);
         notifyFounderOnWhatsapp(waWindow, payload, currentRole);
