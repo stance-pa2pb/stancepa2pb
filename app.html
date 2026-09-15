@@ -178,9 +178,171 @@
     display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:var(--caution);
   }
   .cancelled-icon svg{width:28px; height:28px;}
+
+  /* ============================================================
+     APP SHELL — splash, onboarding, identity, home, bottom nav.
+     These wrap the existing booking flow so the whole thing reads
+     as one product with an entry, not a form you land on cold.
+     ============================================================ */
+
+  body.immersive header{display:none;}
+  body.immersive main{padding:0; max-width:none;}
+
+  /* ---- Splash ---- */
+  #screen-splash{
+    display:none; position:fixed; inset:0; z-index:50; background:var(--ink);
+    flex-direction:column; align-items:center; justify-content:center; cursor:pointer; overflow-y:auto;
+  }
+  #screen-splash.active{display:flex;}
+  .splash-mark{
+    font-family:'Rajdhani'; font-weight:700; font-size:2.6rem; letter-spacing:0.02em;
+    opacity:0; transform:scale(0.85); animation:splashIn 0.7s var(--ease) forwards;
+  }
+  .splash-mark span{color:var(--lime);}
+  .splash-tagline{
+    color:var(--ash); font-size:0.85rem; margin-top:10px; letter-spacing:0.06em;
+    opacity:0; animation:splashTagline 0.6s ease forwards; animation-delay:0.55s;
+  }
+  @keyframes splashIn{
+    0%{opacity:0; transform:scale(0.85);}
+    60%{opacity:1; transform:scale(1.04);}
+    100%{opacity:1; transform:scale(1);}
+  }
+  @keyframes splashTagline{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---- Onboarding ---- */
+  #screen-onboarding{
+    display:none; position:fixed; inset:0; z-index:40; background:var(--ink);
+    flex-direction:column; padding:0 0 30px; overflow-y:auto;
+  }
+  #screen-onboarding.active{display:flex;}
+  .ob-slides{flex:1; position:relative; overflow:hidden;}
+  .ob-slide{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:40px 32px; text-align:center; opacity:0; transform:translateX(24px); transition:opacity .35s var(--ease), transform .35s var(--ease);
+    pointer-events:none;
+  }
+  .ob-slide.active{opacity:1; transform:translateX(0); pointer-events:auto;}
+  .ob-icon{width:76px; height:76px; border-radius:20px; background:var(--surface); display:flex; align-items:center; justify-content:center; margin-bottom:28px; color:var(--lime);}
+  .ob-icon svg{width:34px; height:34px;}
+  .ob-slide h2{font-size:1.9rem; line-height:1.1; margin-bottom:12px; letter-spacing:-0.01em;}
+  .ob-slide p{color:var(--ash); font-size:0.95rem; max-width:280px; line-height:1.5;}
+  .ob-footer{padding:24px 28px 0;}
+  .ob-dots{display:flex; justify-content:center; gap:7px; margin-bottom:20px;}
+  .ob-dots span{width:6px; height:6px; border-radius:50%; background:var(--line); transition:background .2s ease, width .2s ease;}
+  .ob-dots span.active{background:var(--lime); width:18px; border-radius:3px;}
+  .ob-skip{
+    display:block; text-align:center; color:var(--ash); font-size:0.85rem; margin-top:14px;
+    background:none; border:none; cursor:pointer; width:100%; padding:6px; font-family:inherit;
+  }
+
+  /* ---- Identity / auth ---- */
+  #screen-auth{
+    display:none; position:fixed; inset:0; z-index:35; background:var(--ink);
+    flex-direction:column; justify-content:flex-end; padding:0; overflow-y:auto;
+  }
+  #screen-auth.active{display:flex;}
+  .auth-hero{flex:1; min-height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;}
+  .auth-hero .logo-mark{font-family:'Rajdhani'; font-weight:700; font-size:1.7rem;}
+  .auth-hero .logo-mark span{color:var(--lime);}
+  .auth-sheet{background:var(--surface); border-radius:24px 24px 0 0; padding:28px 24px calc(34px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); flex-shrink:0;}
+  .auth-sheet h2{font-size:1.4rem; margin-bottom:4px;}
+  .auth-sheet .sub{margin-bottom:20px;}
+  .auth-secondary{
+    width:100%; padding:15px; border-radius:12px; border:1px solid var(--line); background:transparent;
+    color:var(--ash); font-family:inherit; font-size:0.9rem; margin-top:10px; cursor:pointer; text-align:center;
+  }
+  .auth-fields{max-height:0; overflow:hidden; transition:max-height .3s var(--ease);}
+  .auth-fields.open{max-height:340px;}
+
+  /* ---- Home ---- */
+  .home-greeting{padding:24px 20px 4px;}
+  .home-greeting .hi{color:var(--ash); font-size:0.88rem; margin-bottom:2px;}
+  .home-greeting h1{font-size:1.5rem; letter-spacing:-0.01em;}
+  .home-card{
+    margin:18px 20px 0; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:6px;
+  }
+  .home-field{display:flex; align-items:center; gap:12px; padding:14px 12px; position:relative;}
+  .home-field:not(:last-child)::after{
+    content:''; position:absolute; left:44px; right:12px; bottom:0; height:1px; background:var(--line);
+  }
+  .home-field .fdot{width:8px; height:8px; border-radius:50%; background:var(--paper); flex-shrink:0;}
+  .home-field.dest .fdot{background:var(--lime); border-radius:2px;}
+  .home-field input{
+    border:none; background:none; padding:0; margin:0; font-size:0.95rem; flex:1;
+  }
+  .home-field input:focus{outline:none;}
+  .home-cta{padding:18px 20px 8px;}
+  .home-section-label{padding:22px 20px 10px; font-size:0.8rem; color:var(--ash);}
+  .quick-row{display:flex; gap:10px; padding:0 20px; overflow-x:auto;}
+  .quick-chip{
+    flex-shrink:0; background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:12px 16px; font-size:0.82rem; color:var(--ash); display:flex; align-items:center; gap:8px; opacity:0.7;
+  }
+  .quick-chip svg{width:15px; height:15px;}
+  .quick-chip .soon{font-size:0.62rem; background:var(--surface-2); padding:2px 6px; border-radius:5px; margin-left:2px;}
+
+  /* ---- Bottom nav ---- */
+  .bottom-nav{
+    display:flex; border-top:1px solid var(--line); background:rgba(8,8,11,0.92); backdrop-filter:blur(10px);
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom)); position:sticky; bottom:0; z-index:5;
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 4px;
+    background:none; border:none; color:var(--ash); font-family:inherit; font-size:0.68rem; cursor:pointer; position:relative;
+  }
+  .nav-item svg{width:21px; height:21px;}
+  .nav-item.active{color:var(--lime);}
+  .nav-item .nsoon{
+    position:absolute; top:2px; right:18%; font-size:0.5rem; background:var(--surface-2); color:var(--ash);
+    padding:1px 4px; border-radius:4px; letter-spacing:0.02em;
+  }
+
+  /* ---- Map placeholder: an explicit, honest integration point — not a
+     fake map pretending live tracking already works. ---- */
+  .map-placeholder{
+    height:150px; border-radius:14px; border:1px dashed var(--line); background:var(--surface);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    color:var(--ash); margin-bottom:18px;
+  }
+  .map-placeholder svg{width:22px; height:22px; opacity:0.6;}
+  .map-placeholder span{font-size:0.72rem;}
+
+  /* ---- Trip in progress: a car icon moving along the route line — the
+     one deliberate motion for "you are en route right now." ---- */
+  .progress-route{position:relative; height:40px; margin:6px 0 18px;}
+  .progress-route .track{position:absolute; top:50%; left:0; right:0; height:2px; background:var(--line); transform:translateY(-50%);}
+  .progress-route .track-fill{position:absolute; top:50%; left:0; height:2px; background:var(--lime); transform:translateY(-50%); animation:tripAdvance 3.4s ease-in-out infinite alternate;}
+  @keyframes tripAdvance{from{width:8%;} to{width:82%;}}
+  .progress-route .car-marker{
+    position:absolute; top:50%; width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%;
+    background:var(--lime); color:#08080B; display:flex; align-items:center; justify-content:center;
+    animation:tripAdvancePos 3.4s ease-in-out infinite alternate;
+  }
+  .progress-route .car-marker svg{width:14px; height:14px;}
+  @keyframes tripAdvancePos{from{left:8%;} to{left:82%;}}
+
+  /* ---- Account ---- */
+  .account-card{margin:20px; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:20px; display:flex; align-items:center; gap:14px;}
+  .account-avatar{width:52px; height:52px; border-radius:50%; background:var(--lime-dim); color:var(--lime); display:flex; align-items:center; justify-content:center; font-family:'Rajdhani'; font-weight:700; font-size:1.2rem;}
+  .account-list{margin:0 20px;}
+  .account-row{
+    display:flex; align-items:center; justify-content:space-between; padding:16px 4px; border-bottom:1px solid var(--line);
+    color:var(--paper); font-size:0.92rem;
+  }
+  .account-row .arow-label{display:flex; align-items:center; gap:12px; color:var(--ash);}
+  .account-row .arow-label svg{width:18px; height:18px;}
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(12px); background:var(--surface-2);
+    border:1px solid var(--line); color:var(--paper); padding:12px 18px; border-radius:10px; font-size:0.85rem;
+    opacity:0; transition:opacity .2s ease, transform .2s ease; z-index:60; pointer-events:none; white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 </style>
 </head>
-<body>
+<body class="immersive">
+
+<div id="toast" class="toast"></div>
 
 <header>
   <a href="index.html" class="logo">STANCE <span>PA2PB</span></a>
@@ -189,40 +351,159 @@
 
 <main>
 
-  <div class="screen active" id="screen-request">
-    <div class="step-track"><span class="done"></span><span></span><span></span></div>
-    <h2>Where you headed?</h2>
-    <p class="sub">Tell us your trip and we'll match you with a nearby crew.</p>
+  <div class="screen active" id="screen-splash">
+    <div class="splash-mark">STANCE <span>PA2PB</span></div>
+    <div class="splash-tagline">MOVE DIFFERENT</div>
+  </div>
 
-    <label>Your name</label>
-    <input type="text" id="reqName" placeholder="e.g. Kabelo Mlotshwa">
+  <div class="screen" id="screen-onboarding">
+    <div class="ob-slides">
+      <div class="ob-slide" data-slide="0">
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM3 17V9l2-5h14l2 5v8"/></svg></div>
+        <h2>Move different.</h2>
+        <p>Real crews, real builds. STANCE connects you with drivers who actually care about their cars.</p>
+      </div>
+      <div class="ob-slide" data-slide="1">
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <h2>Your ride. Your style.</h2>
+        <p>Pick a crew that matches your vibe, or let us match you with someone nearby in seconds.</p>
+      </div>
+      <div class="ob-slide" data-slide="2">
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <h2>More than a ride.</h2>
+        <p>STANCE is a community. Rides today, events, crews and culture as we grow.</p>
+      </div>
+    </div>
+    <div class="ob-footer">
+      <div class="ob-dots"><span class="active" data-dot="0"></span><span data-dot="1"></span><span data-dot="2"></span></div>
+      <button class="btn" id="obNextBtn" onclick="onboardingNext()">Next</button>
+      <button class="ob-skip" onclick="finishOnboarding()">Skip</button>
+    </div>
+  </div>
 
-    <label>WhatsApp number</label>
-    <input type="tel" id="reqWhatsapp" placeholder="e.g. 0679503097">
+  <div class="screen" id="screen-auth">
+    <div class="auth-hero">
+      <div class="logo-mark">STANCE <span>PA2PB</span></div>
+    </div>
+    <div class="auth-sheet">
+      <h2 id="authTitle">Let's get you moving</h2>
+      <p class="sub" id="authSub">One quick step so your crew knows who's riding.</p>
 
-    <label>Pickup location</label>
-    <input type="text" id="reqPickup" placeholder="e.g. Sandton Gautrain Station">
+      <div id="authFields" class="auth-fields">
+        <label>Your name</label>
+        <input type="text" id="authName" placeholder="e.g. Kabelo Mlotshwa">
+        <label>WhatsApp number</label>
+        <input type="tel" id="authWhatsapp" placeholder="e.g. 0679503097">
+        <p class="error-msg" id="authError">Please fill in both fields with a valid WhatsApp number.</p>
+      </div>
 
-    <label>Drop-off location</label>
-    <input type="text" id="reqDropoff" placeholder="e.g. Melrose Arch">
+      <button class="btn" id="authPrimaryBtn" onclick="handleAuthPrimary()">Continue with WhatsApp</button>
+      <button class="auth-secondary" onclick="showToast('Email login is coming soon — WhatsApp works today.')">Continue with email</button>
+    </div>
+  </div>
 
-    <p class="error-msg" id="requestError">Please fill in all fields before requesting.</p>
+  <div class="screen" id="screen-home">
+    <div class="home-greeting">
+      <div class="hi">Hey <span id="homeGreetName">there</span> 👋</div>
+      <h1>Where are you going?</h1>
+    </div>
+    <div class="home-card">
+      <div class="home-field">
+        <span class="fdot"></span>
+        <input type="text" id="reqPickup" placeholder="Pickup location">
+      </div>
+      <div class="home-field dest">
+        <span class="fdot"></span>
+        <input type="text" id="reqDropoff" placeholder="Where to?">
+      </div>
+    </div>
+    <p class="error-msg" id="requestError" style="margin:10px 20px 0;">Please fill in pickup and drop-off first.</p>
+    <div class="home-cta">
+      <button class="btn" onclick="goToCrewSelect()">See ride options</button>
+    </div>
 
-    <button class="btn" onclick="goToCrewSelect()">Find a ride</button>
+    <div class="home-section-label">Coming soon to STANCE</div>
+    <div class="quick-row">
+      <div class="quick-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule a ride<span class="soon">Soon</span></div>
+      <div class="quick-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>STANCE Events<span class="soon">Soon</span></div>
+      <div class="quick-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5 2.3-7.2-6-4.6h7.6z"/></svg>Rewards<span class="soon">Soon</span></div>
+    </div>
+
+    <!-- Hidden — carries the identity captured once at screen-auth through
+         to the existing booking validation/submit logic unchanged. -->
+    <input type="hidden" id="reqName">
+    <input type="hidden" id="reqWhatsapp">
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-nav="home" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home
+      </button>
+      <button class="nav-item" onclick="showToast('Ride activity is coming soon.')">
+        <span class="nsoon">Soon</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Activity
+      </button>
+      <button class="nav-item" onclick="showToast('STANCE Community is coming soon.')">
+        <span class="nsoon">Soon</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Community
+      </button>
+      <button class="nav-item" data-nav="account" onclick="switchTab('account')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account
+      </button>
+    </nav>
+  </div>
+
+  <div class="screen" id="screen-account">
+    <div class="home-greeting"><h1>Account</h1></div>
+    <div class="account-card">
+      <div class="account-avatar" id="accountInitial">—</div>
+      <div>
+        <h3 id="accountName" style="font-size:1.05rem;">—</h3>
+        <p class="sub" style="margin:2px 0 0;" id="accountWhatsapp">—</p>
+      </div>
+    </div>
+    <div class="account-list">
+      <div class="account-row" onclick="editProfile()" style="cursor:pointer;">
+        <span class="arow-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit profile</span>
+        <span>›</span>
+      </div>
+      <div class="account-row" onclick="showToast('Ride history is coming soon.')" style="cursor:pointer;">
+        <span class="arow-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Ride history</span>
+        <span class="nsoon" style="position:static;">Soon</span>
+      </div>
+      <div class="account-row" onclick="clearSession()" style="cursor:pointer;">
+        <span class="arow-label" style="color:var(--caution);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sign out</span>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <button class="nav-item" data-nav="home" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home
+      </button>
+      <button class="nav-item" onclick="showToast('Ride activity is coming soon.')">
+        <span class="nsoon">Soon</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Activity
+      </button>
+      <button class="nav-item" onclick="showToast('STANCE Community is coming soon.')">
+        <span class="nsoon">Soon</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Community
+      </button>
+      <button class="nav-item active" data-nav="account" onclick="switchTab('account')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account
+      </button>
+    </nav>
   </div>
 
   <div class="screen" id="screen-category">
-    <div class="step-track"><span class="done"></span><span class="done"></span><span></span></div>
+    <div class="step-track"><span class="done"></span><span></span></div>
     <h2>Choose your ride</h2>
     <p class="sub" id="categorySub">More ride types are coming soon.</p>
     <div class="crew-list" id="categoryList">
       <p class="sub">Loading ride types...</p>
     </div>
-    <button class="btn btn-outline" onclick="showScreen('screen-request')">Back</button>
+    <button class="btn btn-outline" onclick="showScreen('screen-home')">Back</button>
   </div>
 
   <div class="screen" id="screen-crew">
-    <div class="step-track"><span class="done"></span><span class="done"></span><span class="done"></span></div>
+    <div class="step-track"><span class="done"></span><span class="done"></span></div>
     <h2>Choose your stance</h2>
     <p class="sub" id="crewSub">Verified crews near you</p>
     <div class="crew-list" id="crewList">
@@ -232,7 +513,7 @@
       No preference — match me with any available crew
     </div>
     <button class="btn" id="confirmRequestBtn" onclick="submitRequest()">Confirm request</button>
-    <button class="btn btn-outline" onclick="showScreen('screen-request')">Back</button>
+    <button class="btn btn-outline" onclick="showScreen('screen-home')">Back</button>
   </div>
 
   <div class="screen" id="screen-waiting">
@@ -255,8 +536,12 @@
   </div>
 
   <div class="screen" id="screen-matched">
-    <h2>You're matched</h2>
-    <p class="sub">Your crew is confirmed for this ride.</p>
+    <h2 id="matchedHeadline">Your crew is on the way</h2>
+    <p class="sub" id="matchedSub">Your crew is confirmed for this ride.</p>
+    <div class="map-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 20l-6-3V4l6 3 6-3 6 3v13l-6-3-6 3z"/><path d="M9 7v13M15 4v13"/></svg>
+      <span>Live map connects here</span>
+    </div>
     <div class="driver-card">
       <div class="driver-row">
         <div class="driver-avatar">
@@ -286,6 +571,42 @@
       </a>
     </div>
     <p class="sub" style="text-align:center;">Pay the driver directly when your ride is complete.</p>
+  </div>
+
+  <div class="screen" id="screen-on-trip">
+    <h2>You're on your way</h2>
+    <p class="sub">Trip in progress — sit back, you're headed there now.</p>
+    <div class="map-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 20l-6-3V4l6 3 6-3 6 3v13l-6-3-6 3z"/><path d="M9 7v13M15 4v13"/></svg>
+      <span>Live map connects here</span>
+    </div>
+    <div class="progress-route">
+      <div class="track"></div>
+      <div class="track-fill"></div>
+      <div class="car-marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM3 17V9l2-5h14l2 5v8"/></svg></div>
+    </div>
+    <div class="route-card">
+      <div class="route-line">
+        <div class="route-point"><span class="node"></span><div><div class="rp-label">Pickup</div><div class="rp-value" id="onTripPickup">—</div></div></div>
+        <div class="route-point end"><span class="node"></span><div><div class="rp-label">Drop-off</div><div class="rp-value" id="onTripDropoff">—</div></div></div>
+      </div>
+    </div>
+    <div class="driver-card">
+      <div class="driver-row" style="margin-bottom:0;">
+        <div class="driver-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM3 17V9l2-5h14l2 5v8"/>
+          </svg>
+        </div>
+        <div class="driver-details">
+          <h3 id="onTripDriverName">—</h3>
+          <p id="onTripDriverCar">—</p>
+        </div>
+      </div>
+      <div class="trip-detail" id="onTripFareRow" style="display:none;">
+        <div class="trip-row fare"><span>Fare</span><span id="onTripFare">—</span></div>
+      </div>
+    </div>
   </div>
 
   <div class="screen" id="screen-completed">
@@ -340,7 +661,7 @@
   let availableCrews = [];
   let vehicleCategories = [];
   let selectedCategory = null;
-  let currentScreenId = 'screen-request';
+  let currentScreenId = 'screen-splash';
 
   const CAR_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM3 17V9l2-5h14l2 5v8"/></svg>';
   const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
@@ -363,7 +684,8 @@
   // Every screen has a position in the journey, so we can tell forward
   // motion from backward motion and slide accordingly — the same single
   // transition mechanism for the whole flow, not a different effect per screen.
-  const SCREEN_ORDER = ['screen-request','screen-category','screen-crew','screen-waiting','screen-matched','screen-completed','screen-cancelled'];
+  const SCREEN_ORDER = ['screen-splash','screen-onboarding','screen-auth','screen-home','screen-account','screen-category','screen-crew','screen-waiting','screen-matched','screen-on-trip','screen-completed','screen-cancelled'];
+  const IMMERSIVE_SCREENS = ['screen-splash','screen-onboarding','screen-auth'];
 
   function showScreen(id){
     if(id === currentScreenId) return;
@@ -372,6 +694,115 @@
     const next = document.getElementById(id);
     next.classList.add('active', goingForward ? 'slide-in-fwd' : 'slide-in-back');
     currentScreenId = id;
+    document.body.classList.toggle('immersive', IMMERSIVE_SCREENS.includes(id));
+  }
+
+  // ---- Toast (used by the "coming soon" placeholders) ----
+  let toastTimer = null;
+  function showToast(message){
+    const el = document.getElementById('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  // ---- Local session — a lightweight identity capture, NOT a real
+  // multi-device account system. Supabase Auth for riders is the actual
+  // integration point for that; this just remembers who's asking on this
+  // one device/browser, the same way the old form's name/whatsapp fields
+  // worked, just asked once instead of every single time. ----
+  function getSession(){
+    try { return JSON.parse(localStorage.getItem('stance_session') || 'null'); }
+    catch(e){ return null; }
+  }
+  function saveSession(name, whatsapp){
+    localStorage.setItem('stance_session', JSON.stringify({ name, whatsapp }));
+  }
+  function clearSession(){
+    localStorage.removeItem('stance_session');
+    showScreen('screen-auth');
+  }
+  function applySessionToForm(session){
+    document.getElementById('reqName').value = session.name;
+    document.getElementById('reqWhatsapp').value = session.whatsapp;
+    document.getElementById('homeGreetName').textContent = session.name.split(' ')[0];
+    document.getElementById('accountName').textContent = session.name;
+    document.getElementById('accountWhatsapp').textContent = session.whatsapp;
+    document.getElementById('accountInitial').textContent = session.name.trim().charAt(0).toUpperCase() || '—';
+  }
+
+  // ---- Onboarding ----
+  let obSlide = 0;
+  function renderOnboardingSlide(){
+    document.querySelectorAll('.ob-slide').forEach(s => s.classList.toggle('active', Number(s.dataset.slide) === obSlide));
+    document.querySelectorAll('.ob-dots span').forEach(d => d.classList.toggle('active', Number(d.dataset.dot) === obSlide));
+    document.getElementById('obNextBtn').textContent = obSlide === 2 ? 'Get started' : 'Next';
+  }
+  function onboardingNext(){
+    if(obSlide === 2){ finishOnboarding(); return; }
+    obSlide++;
+    renderOnboardingSlide();
+  }
+  function finishOnboarding(){
+    localStorage.setItem('stance_onboarded', '1');
+    const session = getSession();
+    if(session){ applySessionToForm(session); showScreen('screen-home'); }
+    else { showScreen('screen-auth'); }
+  }
+
+  // ---- Identity / auth ----
+  function handleAuthPrimary(){
+    const fields = document.getElementById('authFields');
+    if(!fields.classList.contains('open')){
+      fields.classList.add('open');
+      document.getElementById('authPrimaryBtn').textContent = 'Continue';
+      setTimeout(() => document.getElementById('authName').focus(), 200);
+      return;
+    }
+    const name = document.getElementById('authName').value.trim();
+    const whatsapp = document.getElementById('authWhatsapp').value.trim();
+    const errorEl = document.getElementById('authError');
+    if(!name || !isValidWhatsapp(whatsapp)){
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+    saveSession(name, whatsapp);
+    applySessionToForm({ name, whatsapp });
+
+    if(editingProfile){
+      editingProfile = false;
+      document.getElementById('authTitle').textContent = "Let's get you moving";
+      document.getElementById('authSub').textContent = 'One quick step so your crew knows who\'s riding.';
+      document.getElementById('authPrimaryBtn').textContent = 'Continue with WhatsApp';
+      document.getElementById('authFields').classList.remove('open');
+      showToast('Profile updated.');
+      switchTab('account');
+    } else {
+      showScreen('screen-home');
+    }
+  }
+
+  let editingProfile = false;
+  function editProfile(){
+    editingProfile = true;
+    const session = getSession() || { name:'', whatsapp:'' };
+    document.getElementById('authTitle').textContent = 'Edit your details';
+    document.getElementById('authSub').textContent = 'Update your name or WhatsApp number.';
+    document.getElementById('authName').value = session.name;
+    document.getElementById('authWhatsapp').value = session.whatsapp;
+    document.getElementById('authFields').classList.add('open');
+    document.getElementById('authPrimaryBtn').textContent = 'Save changes';
+    showScreen('screen-auth');
+  }
+
+  // ---- Bottom-tab switching (home / account only have real content today) ----
+  function switchTab(name){
+    document.querySelectorAll('.nav-item[data-nav]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.nav === name);
+    });
+    showScreen(name === 'account' ? 'screen-account' : 'screen-home');
   }
 
   function getRideIdFromUrl(){
@@ -568,6 +999,12 @@
     }
   }
 
+  const MATCHED_HEADLINES = {
+    ACCEPTED: 'Your crew is on the way',
+    DRIVER_ARRIVING: 'Your crew is almost there',
+    DRIVER_ARRIVED: 'Your crew has arrived'
+  };
+
   function renderRideState(ride){
     // REQUESTED / MATCHING both mean "still looking for a crew" from the
     // rider's point of view — MATCHING exists for a future smarter dispatch
@@ -576,10 +1013,9 @@
       document.getElementById('waitPickup').textContent = ride.pickup || '—';
       document.getElementById('waitDropoff').textContent = ride.dropoff || '—';
       showScreen('screen-waiting');
-    // ACCEPTED / DRIVER_ARRIVING / DRIVER_ARRIVED / TRIP_STARTED all show the
-    // same "matched" screen for now — those in-between states are reserved
-    // for when there's a live driver app to actually report them.
-    } else if(['ACCEPTED','DRIVER_ARRIVING','DRIVER_ARRIVED','TRIP_STARTED'].includes(ride.status)){
+
+    } else if(['ACCEPTED','DRIVER_ARRIVING','DRIVER_ARRIVED'].includes(ride.status)){
+      document.getElementById('matchedHeadline').textContent = MATCHED_HEADLINES[ride.status];
       document.getElementById('matchedDriverName').textContent = ride.driver_name || 'Your driver';
       document.getElementById('matchedDriverCar').textContent =
         [ride.driver_car, ride.driver_build].filter(Boolean).join(' · ') || ride.vehicle_category_label || 'STANCE crew';
@@ -602,7 +1038,21 @@
         document.getElementById('matchedWhatsappBtn').href = `https://wa.me/${digits}`;
       }
       showScreen('screen-matched');
-      stopPolling();
+      // Polling continues — the trip isn't over yet, there's still
+      // TRIP_STARTED and TRIP_COMPLETED to come.
+
+    } else if(ride.status === 'TRIP_STARTED'){
+      document.getElementById('onTripDriverName').textContent = ride.driver_name || 'Your driver';
+      document.getElementById('onTripDriverCar').textContent =
+        [ride.driver_car, ride.driver_build].filter(Boolean).join(' · ') || ride.vehicle_category_label || 'STANCE crew';
+      document.getElementById('onTripPickup').textContent = ride.pickup || '—';
+      document.getElementById('onTripDropoff').textContent = ride.dropoff || '—';
+      if(ride.fare_zar != null){
+        document.getElementById('onTripFareRow').style.display = 'block';
+        document.getElementById('onTripFare').textContent = 'R' + ride.fare_zar;
+      }
+      showScreen('screen-on-trip');
+
     } else if(ride.status === 'TRIP_COMPLETED'){
       document.getElementById('ratingBox').style.display = ride.already_rated ? 'none' : 'block';
       document.getElementById('ratingThanks').style.display = ride.already_rated ? 'block' : 'none';
@@ -682,20 +1132,56 @@
     const url = new URL(window.location);
     url.searchParams.delete('ride');
     window.history.replaceState({}, '', url);
-    document.getElementById('reqName').value = '';
-    document.getElementById('reqWhatsapp').value = '';
+    // Name/WhatsApp come from the session, not the trip — leave them as-is.
     document.getElementById('reqPickup').value = '';
     document.getElementById('reqDropoff').value = '';
     document.getElementById('waitPreferredRow').style.display = 'none';
-    showScreen('screen-request');
+    document.getElementById('waitFareRow').style.display = 'none';
+    document.getElementById('matchedFareRow').style.display = 'none';
+    switchTab('home');
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    const session = getSession();
+    const onboarded = localStorage.getItem('stance_onboarded');
     const existingRide = getRideIdFromUrl() || localStorage.getItem('stance_last_ride');
+
+    // An in-progress ride always wins — resume straight into it, no splash
+    // or onboarding replay for someone who's already mid-trip.
     if(existingRide){
+      if(session) applySessionToForm(session);
+      document.body.classList.remove('immersive');
       setRideId(existingRide);
-      showScreen('screen-waiting');
+      currentScreenId = 'screen-waiting';
+      document.getElementById('screen-splash').classList.remove('active');
+      document.getElementById('screen-waiting').classList.add('active');
       startPolling(existingRide);
+      checkStatus(existingRide);
+      return;
+    }
+
+    // First-time visitor: cinematic splash, then onboarding.
+    // Returning visitor: skip straight past both, into a proper reveal.
+    if(!onboarded){
+      setTimeout(() => {
+        if(currentScreenId === 'screen-splash'){
+          obSlide = 0;
+          renderOnboardingSlide();
+          showScreen('screen-onboarding');
+        }
+      }, 1600);
+      document.getElementById('screen-splash').addEventListener('click', () => {
+        if(currentScreenId === 'screen-splash'){
+          obSlide = 0;
+          renderOnboardingSlide();
+          showScreen('screen-onboarding');
+        }
+      });
+    } else if(session){
+      applySessionToForm(session);
+      showScreen('screen-home');
+    } else {
+      showScreen('screen-auth');
     }
   });
 </script>
