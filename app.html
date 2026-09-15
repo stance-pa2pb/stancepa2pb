@@ -279,17 +279,28 @@
     localStorage.setItem('stance_last_ride', id);
   }
 
+  // Accepts SA numbers like 0679503097 or +27679503097, with optional
+  // spaces/dashes between groups.
+  function isValidWhatsapp(number){
+    const digitsOnly = number.replace(/[\s-]/g, '');
+    return /^(0|\+27)[0-9]{9}$/.test(digitsOnly);
+  }
+
   function validateRequestFields(){
     const name = document.getElementById('reqName').value.trim();
     const whatsapp = document.getElementById('reqWhatsapp').value.trim();
     const pickup = document.getElementById('reqPickup').value.trim();
     const dropoff = document.getElementById('reqDropoff').value.trim();
-    return name && whatsapp && pickup && dropoff;
+    return name && whatsapp && isValidWhatsapp(whatsapp) && pickup && dropoff;
   }
 
   async function goToCrewSelect(){
     const errorEl = document.getElementById('requestError');
     if(!validateRequestFields()){
+      const whatsapp = document.getElementById('reqWhatsapp').value.trim();
+      errorEl.textContent = (whatsapp && !isValidWhatsapp(whatsapp))
+        ? 'Please enter a valid WhatsApp number, e.g. 0679503097.'
+        : 'Please fill in all fields before requesting.';
       errorEl.style.display = 'block';
       return;
     }
