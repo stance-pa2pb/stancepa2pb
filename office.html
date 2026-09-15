@@ -41,6 +41,7 @@
     width:100%; padding:14px; border-radius:5px; border:none; background:var(--lime); color:#0A0A0D;
     font-family:'Rajdhani'; font-weight:700; font-size:1rem; cursor:pointer;
   }
+  #loginBtn:disabled{opacity:0.6; cursor:default;}
   #loginError{display:none; color:var(--rust); font-size:0.82rem; margin-top:12px;}
 
   /* ---------- DASHBOARD ---------- */
@@ -313,6 +314,12 @@
 
   document.getElementById('loginForm').addEventListener('submit', async function(e){
     e.preventDefault();
+    const loginBtn = document.getElementById('loginBtn');
+    if(loginBtn.disabled) return;
+    const originalBtnText = loginBtn.textContent;
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Signing in...';
+
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     const errorEl = document.getElementById('loginError');
@@ -330,9 +337,13 @@
         showDashboard();
       } else {
         errorEl.style.display = 'block';
+        loginBtn.disabled = false;
+        loginBtn.textContent = originalBtnText;
       }
     } catch(err){
       errorEl.style.display = 'block';
+      loginBtn.disabled = false;
+      loginBtn.textContent = originalBtnText;
     }
   });
 
