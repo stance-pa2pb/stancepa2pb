@@ -495,6 +495,13 @@
     }
   }
 
+  // Accepts SA numbers like 0679503097 or +27679503097, with optional
+  // spaces/dashes between groups.
+  function isValidWhatsapp(number){
+    const digitsOnly = number.replace(/[\s-]/g, '');
+    return /^(0|\+27)[0-9]{9}$/.test(digitsOnly);
+  }
+
   document.getElementById('signupForm').addEventListener('submit', async function(e){
     e.preventDefault();
     const errorMsg = document.getElementById('errorMsg');
@@ -503,6 +510,14 @@
 
     // Guard against double-submits (e.g. an impatient double-tap)
     if(submitBtn.disabled) return;
+
+    const phoneValue = document.getElementById('fPhone').value.trim();
+    if(!isValidWhatsapp(phoneValue)){
+      errorMsg.textContent = 'Please enter a valid WhatsApp number, e.g. 0679503097.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
     const originalBtnText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Joining...';
@@ -515,7 +530,7 @@
     const payload = {
       full_name: document.getElementById('fName').value.trim(),
       email: document.getElementById('fEmail').value.trim(),
-      whatsapp_number: document.getElementById('fPhone').value.trim(),
+      whatsapp_number: phoneValue,
       city: document.getElementById('fCity').value.trim()
     };
 
@@ -545,10 +560,12 @@
         showUnlockOverlay(payload.full_name, currentRole);
       } else {
         if(waWindow) waWindow.close();
+        errorMsg.textContent = 'Something went wrong sending that — check your connection and try again, or message us directly on WhatsApp.';
         errorMsg.style.display = 'block';
       }
     } catch(err){
       if(waWindow) waWindow.close();
+      errorMsg.textContent = 'Something went wrong sending that — check your connection and try again, or message us directly on WhatsApp.';
       errorMsg.style.display = 'block';
     } finally {
       submitBtn.disabled = false;
